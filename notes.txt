@@ -1,0 +1,2 @@
+$user = App\Models\User::find(1);
+$user->assignRole('Admin');

@@ -1,0 +1,217 @@
+{{-- Tab Data Diri (Berisi semua kartu data Anda yang lama) --}}
+                            <div x-show="tab === 'pribadi'" class="space-y-6">
+                                {{-- KARTU DATA PRIBADI ANDA --}}
+                                <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                                    <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Data Pribadi</h4>
+                                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Jenis Kelamin</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Agama</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->agama ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Tanggal Lahir</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->tanggal_lahir ? \Carbon\Carbon::parse($pegawai->tanggal_lahir)->translatedFormat('d F Y') : '-' }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Status Perkawinan</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->status_perkawinan ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">No. HP</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->no_hp ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Email</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->email ?? '-' }}</dd>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <dt class="text-sm font-medium text-gray-500">Alamat</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->alamat ?? '-' }}</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                                {{-- KARTU DATA KEPEGAWAIAN ANDA --}}
+                                <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                                    <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Data Kepegawaian</h4>
+                                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+                                        <div class="sm:col-span-2">
+                                            <dt class="text-sm font-medium text-gray-500">Unit Kerja (OPD)</dt>
+                                            <dd class="mt-1 text-sm text-gray-900 font-semibold">
+                                                {{ $pegawai->opd->nama_opd ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Status Kepegawaian</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->status_kepegawaian ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Jenis Kepegawaian</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->jenis_kepegawaian ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Pangkat</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->pangkat ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Golongan</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->golongan ?? '-' }}</dd>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <dt class="text-sm font-medium text-gray-500">Unit Kerja</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->unit_kerja ?? '-' }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">TMT CPNS</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->tmt_cpns ? \Carbon\Carbon::parse($pegawai->tmt_cpns)->translatedFormat('d F Y') : '-' }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Nomor SK CPNS</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->nomor_sk_cpns ?? '-' }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">TMT PNS</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->tmt_pns ? \Carbon\Carbon::parse($pegawai->tmt_pns)->translatedFormat('d F Y') : '-' }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Nomor SK PNS</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->nomor_sk_pns ?? '-' }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">TMT Jabatan</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->tmt_jabatan ? \Carbon\Carbon::parse($pegawai->tmt_jabatan)->translatedFormat('d F Y') : '-' }}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                                {{-- KARTU DATA PENDIDIKAN ANDA --}}
+                                <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                                    <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Pendidikan Terakhir
+                                    </h4>
+                                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Jenjang</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->pendidikan_terakhir ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Tahun Lulus</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->tahun_lulus ?? '-' }}
+                                            </dd>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <dt class="text-sm font-medium text-gray-500">Jurusan</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->jurusan ?? '-' }}</dd>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <dt class="text-sm font-medium text-gray-500">Asal Sekolah / Universitas
+                                            </dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->asal_sekolah ?? '-' }}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                                {{-- KARTU DATA LAINNYA ANDA --}}
+                                <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                                    <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Data Lainnya</h4>
+                                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-4">
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">NPWP</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->npwp ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">BPJS Kesehatan</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->bpjs_kesehatan ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">BPJS Ketenagakerjaan</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->bpjs_ketenagakerjaan ?? '-' }}</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-sm font-medium text-gray-500">Nama Bank</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">{{ $pegawai->nama_bank ?? '-' }}
+                                            </dd>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <dt class="text-sm font-medium text-gray-500">Nomor Rekening</dt>
+                                            <dd class="mt-1 text-sm text-gray-900">
+                                                {{ $pegawai->rekening_bank ?? '-' }}</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+
+
+
+
+
+
+                             {{-- TAB BARU: Riwayat Pangkat --}}
+                            <div x-show="tab === 'riwayat'" style="display: none;">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="text-lg font-bold text-gray-800">Riwayat Pangkat & Jabatan</h4>
+                                    @role('Admin|Pengelola')
+                                        <a href="{{ route('pegawai.riwayat.create', $pegawai->id) }}"
+                                            class="px-3 py-1 bg-blue-500 text-white text-xs font-semibold rounded-md hover:bg-blue-600">
+                                            + Tambah Riwayat
+                                        </a>
+                                    @endrole
+                                </div>
+                                <div class="space-y-4">
+                                    @forelse($pegawai->riwayatPangkats as $riwayat)
+                                        <div class="p-4 border rounded-md bg-gray-50">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <p class="font-bold text-gray-900">{{ $riwayat->pangkat }}
+                                                        ({{ $riwayat->golongan }})
+                                                    </p>
+                                                    <p class="text-sm text-gray-700">{{ $riwayat->jabatan }}</p>
+                                                    <p class="text-xs text-gray-500 mt-1">TMT:
+                                                        {{ \Carbon\Carbon::parse($riwayat->tmt_pangkat)->translatedFormat('d F Y') }}
+                                                        | SK: {{ $riwayat->nomor_sk }}</p>
+                                                </div>
+                                                @role('Admin|Pengelola')
+                                                    <div class="flex space-x-2">
+                                                        {{-- Link Edit diubah ke rute baru --}}
+                                                        <a href="{{ route('riwayat-pangkat.edit', $riwayat->id) }}"
+                                                            class="text-yellow-600 hover:text-yellow-900 text-xs">Edit</a>
+
+                                                        {{-- Tombol Hapus diubah menjadi form --}}
+                                                        <form
+                                                            action="{{ route('riwayat-pangkat.destroy', $riwayat->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Yakin ingin menghapus riwayat ini?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="text-red-600 hover:text-red-900 text-xs">Hapus</button>
+                                                        </form>
+                                                    </div>
+                                                @endrole
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="text-center py-4 text-gray-500">
+                                            Belum ada data riwayat pangkat & jabatan.
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
