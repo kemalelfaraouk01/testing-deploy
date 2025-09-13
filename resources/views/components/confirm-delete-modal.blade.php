@@ -1,7 +1,7 @@
 @props(['title', 'action'])
 
-<div x-data="{ show: false }" x-show="show" @keydown.escape.window="show = false"
-    x-on:open-delete-modal.window="show = true; $refs.form.action = event.detail.action" style="display: none;"
+<div x-data="{ show: false, action: '', hash: '' }" x-show="show" @keydown.escape.window="show = false"
+    x-on:open-delete-modal.window="show = true; action = event.detail.action; hash = event.detail.hash" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
     <div @click="show = false" class="fixed inset-0 bg-black/50" x-transition:enter="ease-out duration-300"
         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -36,9 +36,10 @@
         </div>
 
         <div class="flex flex-row-reverse space-x-2 space-x-reverse bg-gray-50 px-6 py-3">
-            <form x-ref="form" method="POST" action="">
+            <form x-bind:action="action" method="POST">
                 @csrf
                 @method('DELETE')
+                <input type="hidden" name="hash" x-bind:value="hash">
                 <button type="submit"
                     class="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:text-sm">
                     Ya, Hapus Data

@@ -66,17 +66,17 @@
                                         <div class="px-4 py-2 font-bold border-b">Notifikasi</div>
                                         @forelse($notifications as $notification)
                                             @php
-                                                $link = '#';
-                                                if (isset($notification->data['pengajuan_id'])) {
-                                                    $link = route(
-                                                        'pengajuan-tpp.show',
-                                                        $notification->data['pengajuan_id'],
-                                                    );
+                                                $link = '#'; // Default link
+
+                                                // Prioritaskan URL dari data notifikasi jika ada
+                                                if (isset($notification->data['url'])) {
+                                                    $link = $notification->data['url'];
+                                                } 
+                                                // Fallback untuk notifikasi lama
+                                                elseif (isset($notification->data['pengajuan_id'])) {
+                                                    $link = route('pengajuan-tpp.show', $notification->data['pengajuan_id']);
                                                 } elseif (isset($notification->data['satyalancana_id'])) {
-                                                    $link = route(
-                                                        'satyalancana.berkas.show',
-                                                        $notification->data['satyalancana_id'],
-                                                    );
+                                                    $link = route('satyalancana.berkas.show', $notification->data['satyalancana_id']);
                                                 }
                                             @endphp
 
@@ -85,7 +85,12 @@
                                                 <p class="text-sm font-medium text-gray-900 truncate">
                                                     {{ $notification->data['message'] }}
                                                 </p>
-                                                <p class="text-xs text-gray-500">
+                                                @if (isset($notification->data['catatan']))
+                                                    <p class="text-xs text-red-600 mt-1" title="{{ $notification->data['catatan'] }}">
+                                                        Catatan: {{ Str::limit($notification->data['catatan'], 50) }}
+                                                    </p>
+                                                @endif
+                                                <p class="text-xs text-gray-500 mt-1">
                                                     {{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}
                                                 </p>
                                             </x-dropdown-link>

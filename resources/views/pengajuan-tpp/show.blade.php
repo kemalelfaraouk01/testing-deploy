@@ -76,7 +76,7 @@
                                     class="bg-white p-3 sm:p-0 sm:bg-transparent rounded-md sm:rounded-none sm:col-span-1 lg:col-span-2">
                                     <dt class="text-sm font-medium text-gray-500">Unit Kerja (OPD)</dt>
                                     <dd class="mt-1 text-sm sm:text-base font-semibold text-gray-900 break-words">
-                                        {{ $pengajuanTpp->opd->nama_opd }}
+                                        {{ $namaOpd }}
                                     </dd>
                                 </div>
 

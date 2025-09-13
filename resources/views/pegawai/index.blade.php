@@ -8,35 +8,45 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             @role('Admin')
-                <div class="flex flex-wrap gap-3 mb-6">
-                    <a href="{{ route('pegawai.create') }}"
-                        class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mr-2">
-                            <path
-                                d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-                        </svg>
-                        Tambah Pegawai
-                    </a>
-                    <a href="{{ route('pegawai.import.form') }}"
-                        class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                            class="w-4 h-4 mr-2">
-                            <path
-                                d="M9.25 13.25a.75.75 0 0 0 1.5 0V4.636l2.955 3.129a.75.75 0 0 0 1.09-1.03l-4.25-4.5a.75.75 0 0 0-1.09 0l-4.25 4.5a.75.75 0 1 0 1.09 1.03L9.25 4.636v8.614Z" />
-                            <path
-                                d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
-                        </svg>
-                        Import Data
-                    </a>
-                    <button x-data
-                        @click.prevent="$dispatch('open-delete-modal', { action: '{{ route('pegawai.destroy.all') }}' })"
-                        class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-medium rounded-lg shadow-sm">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Hapus Semua Data
-                    </button>
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    {{-- Tombol di Kiri --}}
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ route('pegawai.create') }}"
+                            class="group inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mr-2">
+                                <path
+                                    d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                            </svg>
+                            Tambah Pegawai
+                        </a>
+                        <a href="{{ route('pegawai.pensiun') }}"
+                            class="group inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50">
+                            <svg class="w-4 h-4 mr-2 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10zm0 5.25a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75a.75.75 0 01-.75-.75z" clip-rule="evenodd" /></svg>
+                            Arsip Pensiun
+                        </a>
+                    </div>
+                    {{-- Tombol di Kanan --}}
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ route('pegawai.import.form') }}"
+                            class="group inline-flex items-center px-4 py-2 bg-green-100 text-green-700 hover:bg-green-200 border border-green-200 text-sm font-medium rounded-lg shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                class="w-4 h-4 mr-2">
+                                <path
+                                    d="M9.25 13.25a.75.75 0 0 0 1.5 0V4.636l2.955 3.129a.75.75 0 0 0 1.09-1.03l-4.25-4.5a.75.75 0 0 0-1.09 0l-4.25 4.5a.75.75 0 1 0 1.09 1.03L9.25 4.636v8.614Z" />
+                                <path
+                                    d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
+                            </svg>
+                            Import Data
+                        </a>
+                        <button x-data @click.prevent="$dispatch('open-modal', 'confirm-delete-all-pegawai')"
+                            class="group inline-flex items-center px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 border border-red-200 text-sm font-medium rounded-lg shadow-sm">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Hapus Semua Data
+                        </button>
+                    </div>
                 </div>
             @endrole
 
@@ -64,6 +74,57 @@
                 </div>
             @endif
             {{-- ▲▲▲ BATAS AKHIR PERBAIKAN ▲▲▲ --}}
+
+            {{-- Form Filter --}}
+            <div class="mb-6 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                <form method="GET" action="{{ route('pegawai.index') }}">
+                    <div class="flex flex-col sm:flex-row items-end gap-4">
+                        {{-- Filter Nama Pegawai (Semua Role) --}}
+                        <div class="w-full sm:flex-1">
+                            <label for="search_nama" class="block text-sm font-medium text-gray-700 mb-1">Cari Nama
+                                Pegawai</label>
+                            <input type="text" name="search_nama" id="search_nama" placeholder="Ketik nama pegawai..."
+                                value="{{ $searchNama ?? '' }}"
+                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+
+                        {{-- Filter OPD (Hanya Admin) --}}
+                        @role('Admin')
+                            <div class="w-full sm:flex-1">
+                                <label for="opd_id" class="block text-sm font-medium text-gray-700 mb-1">Filter per
+                                    OPD</label>
+                                <select name="opd_id" id="opd_id"
+                                    class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">-- Semua OPD --</option>
+                                    @foreach ($opds as $opd)
+                                        <option value="{{ $opd->id }}" {{ $selectedOpdId == $opd->id ? 'selected' : '' }}>
+                                            {{ $opd->nama_opd }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endrole
+
+                        {{-- Tombol Aksi --}}
+                        <div class="flex items-center space-x-2">
+                            <button type="submit"
+                                class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4 mr-1.5">
+                                    <path fill-rule="evenodd"
+                                        d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Cari
+                            </button>
+                            <a href="{{ route('pegawai.index') }}"
+                                class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                Reset
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-5 border-b border-gray-100">
@@ -192,10 +253,42 @@
                                     </td>
 
                                     <td class="px-6 py-6">
-                                        <span
-                                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                            <div class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-2"></div>
-                                            {{ $pegawai->status_kepegawaian }}
+                                        @php
+                                            $status = $pegawai->status_kepegawaian;
+                                            $base_class = 'inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border';
+                                            $color_classes = '';
+                                            $dot_class = '';
+
+                                            switch ($status) {
+                                                case 'PNS':
+                                                    $color_classes = 'bg-green-100 text-green-800 border-green-200';
+                                                    $dot_class = 'bg-green-500';
+                                                    break;
+                                                case 'CPNS':
+                                                    $color_classes = 'bg-orange-100 text-orange-800 border-orange-200';
+                                                    $dot_class = 'bg-orange-500';
+                                                    break;
+                                                case 'PPPK':
+                                                    $color_classes = 'bg-blue-100 text-blue-800 border-blue-200';
+                                                    $dot_class = 'bg-blue-500';
+                                                    break;
+                                                case 'Honorer':
+                                                    $color_classes = 'bg-purple-100 text-purple-800 border-purple-200';
+                                                    $dot_class = 'bg-purple-500';
+                                                    break;
+                                                case 'Pensiun':
+                                                    $color_classes = 'bg-red-100 text-red-800 border-red-200';
+                                                    $dot_class = 'bg-red-500';
+                                                    break;
+                                                default:
+                                                    $color_classes = 'bg-gray-100 text-gray-800 border-gray-200';
+                                                    $dot_class = 'bg-gray-500';
+                                                    break;
+                                            }
+                                        @endphp
+                                        <span class="{{ $base_class }} {{ $color_classes }}">
+                                            <div class="w-1.5 h-1.5 {{ $dot_class }} rounded-full mr-2"></div>
+                                            <span>{{ $status ?? 'N/A' }}</span>
                                         </span>
                                     </td>
 
@@ -275,10 +368,42 @@
     </div>
 
     {{-- MODAL --}}
-    <x-confirm-delete-modal title="Konfirmasi Hapus Data">
-        Apakah Anda yakin ingin menghapus data pegawai ini? Tindakan ini tidak dapat dibatalkan. Profil pegawai akan
-        terhapus, namun akun login akan tetap ada.
-    </x-confirm-delete-modal>
+    {{-- Modal Konfirmasi Hapus Semua Data --}}
+    <x-modal name="confirm-delete-all-pegawai" :show="$errors->userDeletion->isNotEmpty()" focusable>
+        <form method="post" action="{{ route('pegawai.destroy.all') }}" class="p-6"
+            x-data="{ phrase: 'HAPUS SEMUA DATA', userInput: '' }">
+            @csrf
+            @method('delete')
+
+            <h2 class="text-lg font-medium text-gray-900">
+                Apakah Anda benar-benar yakin?
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600">
+                Tindakan ini akan <span class="font-bold text-red-600">menghapus semua data pegawai beserta akun
+                    login mereka</span> (kecuali akun dengan peran Admin). Tindakan ini tidak dapat dibatalkan.
+            </p>
+
+            <p class="mt-4 text-sm text-gray-800">
+                Silakan ketik <strong class="font-semibold" x-text="phrase"></strong> untuk mengonfirmasi.
+            </p>
+
+            <div class="mt-2">
+                <x-text-input x-model="userInput" id="confirm_text" name="confirm_text" type="text"
+                    class="mt-1 block w-3/4" placeholder="HAPUS SEMUA DATA" />
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <x-secondary-button x-on:click="$dispatch('close')">
+                    {{ __('Batal') }}
+                </x-secondary-button>
+
+                <x-danger-button class="ml-3" x-bind:disabled="userInput !== phrase">
+                    {{ __('Hapus Semua Data Pegawai') }}
+                </x-danger-button>
+            </div>
+        </form>
+    </x-modal>
 
 
     <style>

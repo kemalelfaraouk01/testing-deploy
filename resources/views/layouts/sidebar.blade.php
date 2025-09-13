@@ -182,7 +182,7 @@
             </div>
 
             <!-- Pensiun Dropdown -->
-            @role('Admin|Pengelola')
+            @role('Admin|Pengelola Pensiun')
                 <div class="relative">
                     <button @click="openMenu = (openMenu === 'pensiun' ? '' : 'pensiun')"
                         class="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700/50 transition-all duration-200 group"

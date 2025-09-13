@@ -17,6 +17,7 @@ use App\Http\Controllers\RiwayatJabatanController;
 use App\Http\Controllers\BerkasSatyalancanaController;
 use App\Http\Controllers\VerifikasiSatyalancanaController;
 use App\Http\Controllers\PensiunController;
+use App\Http\Controllers\BerkasPensiunController; // <-- Import baru
 use App\Http\Controllers\OpdController;       // <-- Tambahkan ini di bagian atas
 use App\Http\Controllers\JabatanController;
 
@@ -53,6 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/cuti/create', [CutiController::class, 'create'])->name('cuti.create');
     Route::post('/cuti', [CutiController::class, 'store'])->name('cuti.store');
 
+    // Rute untuk kandidat melengkapi berkas pensiun
+    Route::get('/berkas-pensiun/{pensiun}/lengkapi', [BerkasPensiunController::class, 'create'])->name('berkas-pensiun.create');
+    Route::post('/berkas-pensiun/{pensiun}/lengkapi', [BerkasPensiunController::class, 'store'])->name('berkas-pensiun.store');
+
     Route::get('berkas-satyalancana/{satyalancana}', [BerkasSatyalancanaController::class, 'create'])
         ->name('berkas-satyalancana.create')
         ->middleware('can:lengkapi berkas satyalancana');
@@ -71,6 +76,7 @@ Route::middleware('auth')->group(function () {
     // --- RUTE PEGAWAI (Hak Akses Terpisah) ---
     Route::middleware(['role:Admin|Pengelola|Kepala Bidang|Kepala OPD'])->group(function () {
         Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+        Route::get('/pegawai-pensiun', [PegawaiController::class, 'indexPensiun'])->name('pegawai.pensiun');
         Route::get('/pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
     });
 
@@ -111,7 +117,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/pegawai/{pegawai}/riwayat-pangkat', [RiwayatPangkatController::class, 'store'])->name('pegawai.riwayat.store');
         Route::delete('/riwayat-pangkat/{riwayatPangkat}', [RiwayatPangkatController::class, 'destroy'])->name('riwayat-pangkat.destroy');
 
-        Route::resource('pensiun', PensiunController::class);
+        // Route::resource('pensiun', PensiunController::class); // Moved to its own middleware group
         Route::get('/pengajuan-tpp/{pengajuanTpp}/edit', [PengajuanTppController::class, 'edit'])->name('pengajuan-tpp.edit');
         Route::put('/pengajuan-tpp/{pengajuanTpp}', [PengajuanTppController::class, 'update'])->name('pengajuan-tpp.update');
     });
@@ -129,6 +135,13 @@ Route::middleware('auth')->group(function () {
         Route::get('verifikasi-satyalancana/{satyalancana}', [VerifikasiSatyalancanaController::class, 'show'])->name('verifikasi-satyalancana.show');
         Route::post('verifikasi-satyalancana/{satyalancana}/approve', [VerifikasiSatyalancanaController::class, 'approve'])->name('verifikasi-satyalancana.approve');
         Route::post('verifikasi-satyalancana/{satyalancana}/reject', [VerifikasiSatyalancanaController::class, 'reject'])->name('verifikasi-satyalancana.reject');
+    });
+
+    // --- RUTE PENSIUN ---
+    Route::middleware(['role:Admin|Pengelola Pensiun'])->group(function () {
+        Route::resource('pensiun', PensiunController::class);
+        Route::patch('pensiun/{pensiun}/approve', [PensiunController::class, 'approve'])->name('pensiun.approve');
+        Route::post('pensiun/{pensiun}/request-correction', [PensiunController::class, 'requestCorrection'])->name('pensiun.request-correction');
     });
 
 

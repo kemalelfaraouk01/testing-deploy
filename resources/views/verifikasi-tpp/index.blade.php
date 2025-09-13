@@ -28,11 +28,11 @@
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="py-3 px-4">{{ $daftarBulan[$pengajuan->periode_bulan] }}
                                         {{ $pengajuan->periode_tahun }}</td>
-                                    <td class="py-3 px-4">{{ $pengajuan->opd->nama_opd }}</td>
+                                    <td class="py-3 px-4">{{ $pengajuan->opd?->nama_opd ?? '[OPD tidak ditemukan]' }}</td>
                                     <td class="py-3 px-4">{{ $pengajuan->created_at->translatedFormat('d M Y, H:i') }}
                                     </td>
                                     <td class="text-center py-3 px-4">
-                                        <a href="{{ route('verifikasi-tpp.show', $pengajuan->id) }}"
+                                        <a href="{{ route('verifikasi-tpp.show', ['pengajuanTpp' => $pengajuan->id, 'hash' => $pengajuan->getRouteHash()]) }}"
                                             class="inline-flex items-center px-3 py-1 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase hover:bg-blue-600 transition-colors duration-200">
                                             Lihat & Proses Berkas
                                         </a>
@@ -70,7 +70,7 @@
                                 <div class="mb-3">
                                     <p class="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">OPD
                                         Pengaju</p>
-                                    <p class="text-sm text-gray-900">{{ $pengajuan->opd->nama_opd }}</p>
+                                    <p class="text-sm text-gray-900">{{ $pengajuan->opd?->nama_opd ?? '[OPD tidak ditemukan]' }}</p>
                                 </div>
 
                                 <!-- Tanggal -->
@@ -83,7 +83,7 @@
 
                                 <!-- Action Button -->
                                 <div class="pt-3 border-t border-gray-100">
-                                    <a href="{{ route('verifikasi-tpp.show', $pengajuan->id) }}"
+                                    <a href="{{ route('verifikasi-tpp.show', ['pengajuanTpp' => $pengajuan->id, 'hash' => $pengajuan->getRouteHash()]) }}"
                                         class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-sm text-white uppercase hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">

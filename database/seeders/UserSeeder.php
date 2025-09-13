@@ -33,5 +33,16 @@ class UserSeeder extends Seeder
             ]
         );
         $admin->assignRole('Admin');
+
+        // 3. Membuat User Biasa
+        $userBiasa = User::updateOrCreate(
+            ['nip' => '112233445566778899'], // NIP unik untuk user biasa
+            [
+                'name' => 'User Biasa',
+                'opd_id' => $opd->id,
+                'password' => Hash::make('password'), // Ganti dengan password yang aman
+            ]
+        );
+        $userBiasa->assignRole('User');
     }
 }

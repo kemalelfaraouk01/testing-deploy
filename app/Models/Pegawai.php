@@ -13,6 +13,9 @@ class Pegawai extends Model
 {
     use HasFactory;
 
+    public static $all_statuses = ['PNS', 'CPNS', 'PPPK', 'Honorer', 'Pensiun'];
+    public static $selectable_statuses = ['PNS', 'CPNS', 'PPPK', 'Honorer'];
+
     /**
      * The attributes that are mass assignable.
      *

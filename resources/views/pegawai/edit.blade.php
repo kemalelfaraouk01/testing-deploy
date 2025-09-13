@@ -111,8 +111,17 @@
                             </div>
                             <div>
                                 <x-input-label for="status_kepegawaian" :value="__('Status Kepegawaian')" />
-                                <x-text-input id="status_kepegawaian" class="block mt-1 w-full" type="text"
-                                    name="status_kepegawaian" :value="old('status_kepegawaian', $pegawai->status_kepegawaian)" placeholder="PNS, PPPK, Honorer" />
+                                <select name="status_kepegawaian" id="status_kepegawaian"
+                                    class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    <option value="">-- Pilih Status --</option>
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status }}"
+                                            {{ old('status_kepegawaian', $pegawai->status_kepegawaian) == $status ? 'selected' : '' }}>
+                                            {{ $status }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('status_kepegawaian')" class="mt-2" />
                             </div>
                             <div>
                                 <x-input-label for="tmt_pns" :value="__('TMT PNS')" />

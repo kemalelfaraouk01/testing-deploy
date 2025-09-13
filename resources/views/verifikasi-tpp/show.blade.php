@@ -91,7 +91,7 @@
                                 <div class="md:col-span-2">
                                     <div class="text-sm text-gray-500 mb-1">Unit Kerja</div>
                                     <div class="text-base font-medium text-gray-900">
-                                        {{ $pengajuanTpp->opd->nama_opd }}
+                                        {{ $pengajuanTpp->opd?->nama_opd ?? '[OPD tidak ditemukan]' }}
                                     </div>
                                 </div>
 

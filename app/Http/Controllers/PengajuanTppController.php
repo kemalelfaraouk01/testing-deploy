@@ -199,9 +199,14 @@ class PengajuanTppController extends Controller
             abort(403, 'URL TIDAK VALID.');
         }
 
+        // Eager load relasi OPD untuk memastikan data tersedia di view
+        $pengajuanTpp->load('opd');
+        $namaOpd = $pengajuanTpp->opd ? $pengajuanTpp->opd->nama_opd : '[OPD tidak ditemukan]';
+
         return view('pengajuan-tpp.show', [
             'pengajuanTpp' => $pengajuanTpp,
-            'daftarBulan' => $this->daftarBulan
+            'daftarBulan' => $this->daftarBulan,
+            'namaOpd' => $namaOpd
         ]);
     }
 
