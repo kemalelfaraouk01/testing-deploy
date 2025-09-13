@@ -33,9 +33,6 @@
                 </div>
             </div>
 
-                </div>
-            </div>
-
             {{-- TUGAS: Perbaikan Berkas Pensiun --}}
             @if (isset($tugasPensiun) && $tugasPensiun)
                 <div class="mb-6 bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
@@ -43,8 +40,11 @@
                         <div class="flex items-start space-x-5">
                             <div class="flex-shrink-0">
                                 <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                                    <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                    <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                        </path>
                                     </svg>
                                 </div>
                             </div>
@@ -52,7 +52,8 @@
                                 @if ($tugasPensiun->status == 'Menunggu Berkas')
                                     <h3 class="text-lg font-bold text-gray-800">Tugas: Lengkapi Berkas Pensiun</h3>
                                     <p class="mt-1 text-sm text-gray-600">
-                                        Anda telah diusulkan untuk pensiun. Mohon segera lengkapi berkas persyaratan yang diperlukan.
+                                        Anda telah diusulkan untuk pensiun. Mohon segera lengkapi berkas persyaratan
+                                        yang diperlukan.
                                     </p>
                                     <div class="mt-5">
                                         <a href="{{ route('berkas-pensiun.create', ['pensiun' => $tugasPensiun->id, 'hash' => $tugasPensiun->getRouteHash()]) }}"
@@ -63,13 +64,15 @@
                                 @elseif ($tugasPensiun->status == 'Perlu Perbaikan')
                                     <h3 class="text-lg font-bold text-gray-800">Tugas: Perbaikan Berkas Pensiun</h3>
                                     <p class="mt-1 text-sm text-gray-600">
-                                        Terdapat permintaan perbaikan untuk usulan pensiun Anda. Mohon periksa catatan dan unggah kembali berkas yang sesuai.
+                                        Terdapat permintaan perbaikan untuk usulan pensiun Anda. Mohon periksa catatan
+                                        dan unggah kembali berkas yang sesuai.
                                     </p>
-                                    
+
                                     {{-- Integrated Note Section --}}
                                     <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                                         <p class="font-semibold text-sm text-red-800">Catatan dari Operator:</p>
-                                        <p class="mt-1 text-sm text-red-700">"{{ $tugasPensiun->catatan_perbaikan }}"</p>
+                                        <p class="mt-1 text-sm text-red-700">"{{ $tugasPensiun->catatan_perbaikan }}"
+                                        </p>
                                     </div>
 
                                     <div class="mt-5">
@@ -91,15 +94,21 @@
                     <div class="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl p-6">
                         <div class="flex items-start space-x-4">
                             <div class="flex-shrink-0 p-3 bg-orange-100 rounded-full">
-                                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
                                 </svg>
                             </div>
                             <div>
                                 @if ($tugasSatyalancana->status == 'menunggu_kelengkapan_berkas')
-                                    <h3 class="text-base font-semibold text-orange-800">Tugas: Lengkapi Berkas Satyalancana</h3>
+                                    <h3 class="text-base font-semibold text-orange-800">Tugas: Lengkapi Berkas
+                                        Satyalancana</h3>
                                     <p class="mt-1 text-sm text-orange-700">
-                                        Anda telah diusulkan untuk menerima penghargaan <strong>{{ $tugasSatyalancana->jenis_penghargaan }}</strong>. Mohon segera lengkapi berkas yang diperlukan.
+                                        Anda telah diusulkan untuk menerima penghargaan
+                                        <strong>{{ $tugasSatyalancana->jenis_penghargaan }}</strong>. Mohon segera
+                                        lengkapi berkas yang diperlukan.
                                     </p>
                                     <div class="mt-4">
                                         <a href="{{ route('berkas-satyalancana.create', ['satyalancana' => $tugasSatyalancana->id, 'hash' => $tugasSatyalancana->getRouteHash()]) }}"
@@ -108,11 +117,14 @@
                                         </a>
                                     </div>
                                 @elseif ($tugasSatyalancana->status == 'perlu_perbaikan')
-                                    <h3 class="text-base font-semibold text-orange-800">Tugas: Perbaikan Berkas Satyalancana</h3>
+                                    <h3 class="text-base font-semibold text-orange-800">Tugas: Perbaikan Berkas
+                                        Satyalancana</h3>
                                     <p class="mt-1 text-sm text-orange-700">
-                                        Terdapat permintaan perbaikan untuk usulan Satyalancana Anda. Mohon periksa catatan dan perbarui berkas yang sesuai.
+                                        Terdapat permintaan perbaikan untuk usulan Satyalancana Anda. Mohon periksa
+                                        catatan dan perbarui berkas yang sesuai.
                                     </p>
-                                    <p class="mt-2 text-sm text-gray-600 italic border-l-4 border-gray-300 pl-3">"{{ $tugasSatyalancana->keterangan }}"</p>
+                                    <p class="mt-2 text-sm text-gray-600 italic border-l-4 border-gray-300 pl-3">
+                                        "{{ $tugasSatyalancana->keterangan }}"</p>
                                     <div class="mt-4">
                                         <a href="{{ route('satyalancana.berkas.show', ['satyalancana' => $tugasSatyalancana->id, 'hash' => $tugasSatyalancana->getRouteHash()]) }}"
                                             class="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-semibold rounded-lg hover:bg-orange-700">
