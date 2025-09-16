@@ -54,7 +54,10 @@
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pegawai</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jabatan Terakhir</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pangkat Terakhir</th>
+<<<<<<< HEAD
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jenis Pensiun</th>
+=======
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                             </tr>
                         </thead>
@@ -76,7 +79,10 @@
                                     </td>
                                     <td class="px-6 py-6 text-sm text-gray-800">{{ $pegawai->jabatan ?? '-' }}</td>
                                     <td class="px-6 py-6 text-sm text-gray-800">{{ $pegawai->pangkat ?? '-' }}</td>
+<<<<<<< HEAD
                                     <td class="px-6 py-6 text-sm text-gray-800">{{ $pegawai->pensiun?->jenis_pensiun ?? '-' }}</td>
+=======
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                                     <td class="px-6 py-6">
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border bg-red-100 text-red-800 border-red-200">
                                             <div class="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></div>
@@ -86,7 +92,11 @@
                                 </tr>
                             @empty
                                 <tr>
+<<<<<<< HEAD
                                     <td colspan="5" class="px-6 py-20 text-center">
+=======
+                                    <td colspan="4" class="px-6 py-20 text-center">
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                                         <h3 class="text-lg font-medium text-gray-900">Belum ada data</h3>
                                         <p class="text-sm text-gray-500">Tidak ada data pegawai pensiun untuk ditampilkan.</p>
                                     </td>

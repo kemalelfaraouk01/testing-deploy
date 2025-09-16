@@ -103,6 +103,7 @@
                                     @endforeach
                                 </select>
                             </div>
+<<<<<<< HEAD
 
                             {{-- Filter Status Kepegawaian (Hanya Admin) --}}
                             <div class="w-full sm:flex-1">
@@ -118,6 +119,8 @@
                                     @endforeach
                                 </select>
                             </div>
+=======
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                         @endrole
 
                         {{-- Tombol Aksi --}}
@@ -385,6 +388,7 @@
     {{-- MODAL --}}
     {{-- Modal Konfirmasi Hapus Semua Data --}}
     <x-modal name="confirm-delete-all-pegawai" :show="$errors->userDeletion->isNotEmpty()" focusable>
+<<<<<<< HEAD
         <div class="p-6 sm:p-8">
             <div class="flex flex-col sm:flex-row sm:items-start sm:gap-5">
                 {{-- Ikon Peringatan --}}
@@ -442,6 +446,41 @@
                 </div>
             </form>
         </div>
+=======
+        <form method="post" action="{{ route('pegawai.destroy.all') }}" class="p-6"
+            x-data="{ phrase: 'HAPUS SEMUA DATA', userInput: '' }">
+            @csrf
+            @method('delete')
+
+            <h2 class="text-lg font-medium text-gray-900">
+                Apakah Anda benar-benar yakin?
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600">
+                Tindakan ini akan <span class="font-bold text-red-600">menghapus semua data pegawai beserta akun
+                    login mereka</span> (kecuali akun dengan peran Admin). Tindakan ini tidak dapat dibatalkan.
+            </p>
+
+            <p class="mt-4 text-sm text-gray-800">
+                Silakan ketik <strong class="font-semibold" x-text="phrase"></strong> untuk mengonfirmasi.
+            </p>
+
+            <div class="mt-2">
+                <x-text-input x-model="userInput" id="confirm_text" name="confirm_text" type="text"
+                    class="mt-1 block w-3/4" placeholder="HAPUS SEMUA DATA" />
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <x-secondary-button x-on:click="$dispatch('close')">
+                    {{ __('Batal') }}
+                </x-secondary-button>
+
+                <x-danger-button class="ml-3" x-bind:disabled="userInput !== phrase">
+                    {{ __('Hapus Semua Data Pegawai') }}
+                </x-danger-button>
+            </div>
+        </form>
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
     </x-modal>
 
 

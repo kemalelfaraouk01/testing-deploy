@@ -108,6 +108,7 @@
                                         <x-primary-button class="mt-3 w-full justify-center">Simpan Besaran TPP</x-primary-button>
                                     </form>
 
+<<<<<<< HEAD
                                     <div class="flex items-center gap-2 pt-4 border-t">
                                         <form action="{{ route('verifikasi-tpp.reject', $pengajuanTpp->id) }}" method="POST" class="w-full">
                                             @csrf
@@ -118,6 +119,80 @@
                                             @csrf
                                             <x-primary-button class="w-full justify-center bg-green-600 hover:bg-green-700">Setujui</x-primary-button>
                                         </form>
+=======
+                                <div class="bg-white p-3 sm:p-0 sm:bg-transparent rounded-md sm:rounded-none">
+                                    <dt class="text-sm font-medium text-gray-500">Status</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">
+                                        @if ($pengajuanTpp->status == 'diajukan')
+                                            <span
+                                                class="bg-yellow-200 text-yellow-800 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">{{ Str::ucfirst($pengajuanTpp->status) }}</span>
+                                        @elseif($pengajuanTpp->status == 'disetujui')
+                                            <span
+                                                class="bg-green-200 text-green-800 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">{{ Str::ucfirst($pengajuanTpp->status) }}</span>
+                                        @elseif($pengajuanTpp->status == 'ditolak')
+                                            <span
+                                                class="bg-red-200 text-red-800 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">{{ Str::ucfirst($pengajuanTpp->status) }}</span>
+                                        @else
+                                            <span
+                                                class="bg-gray-200 text-gray-800 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">{{ Str::ucfirst($pengajuanTpp->status) }}</span>
+                                        @endif
+                                    </dd>
+                                </div>
+
+                                <div
+                                    class="bg-white p-3 sm:p-0 sm:bg-transparent rounded-md sm:rounded-none sm:col-span-1 lg:col-span-2">
+                                    <dt class="text-sm font-medium text-gray-500">Unit Kerja (OPD)</dt>
+                                    <dd class="mt-1 text-sm sm:text-base font-semibold text-gray-900 break-words">
+                                        {{ $namaOpd }}
+                                    </dd>
+                                </div>
+
+                                {{-- ▼▼▼ LOGIKA UNTUK MENAMPILKAN BESARAN TPP (HANYA JIKA SUDAH DIPROSES) ▼▼▼ --}}
+                                @if ($pengajuanTpp->status != 'diajukan')
+                                    <div
+                                        class="bg-white p-3 sm:p-0 sm:bg-transparent rounded-md sm:rounded-none sm:col-span-1 lg:col-span-2">
+                                        <dt class="text-sm font-medium text-gray-500">Besaran TPP Disetujui</dt>
+                                        <dd class="mt-1 text-sm sm:text-base font-semibold text-gray-900">
+                                            Rp {{ number_format($pengajuanTpp->besaran_tpp_diajukan, 0, ',', '.') }}
+                                        </dd>
+                                    </div>
+                                @endif
+                                {{-- ▲▲▲ BATAS AKHIR LOGIKA BESARAN TPP ▲▲▲ --}}
+
+                                <div
+                                    class="bg-white p-3 sm:p-0 sm:bg-transparent rounded-md sm:rounded-none sm:col-span-1 lg:col-span-2">
+                                    <dt class="text-sm font-medium text-gray-500">Tanggal Diajukan</dt>
+                                    <dd class="mt-1 text-xs sm:text-sm text-gray-900">
+                                        {{ $pengajuanTpp->created_at->translatedFormat('d F Y, H:i') }} WIB
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Kartu Daftar Berkas - Mobile Responsive --}}
+                        <div class="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-inner mt-6">
+                            <h4 class="text-base sm:text-lg font-bold text-gray-800 border-b pb-2 mb-4">Daftar Berkas
+                                Terlampir</h4>
+                            <div class="space-y-3 sm:space-y-4">
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-white border rounded-md gap-3 sm:gap-0">
+                                    <div class="flex-1">
+                                        <span class="text-xs sm:text-sm font-medium text-gray-700 block">
+                                            1. Daftar Tambahan Penghasilan Pegawai (TPP)
+                                        </span>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        @if ($pengajuanTpp->berkas_tpp)
+                                            <a href="{{ asset('storage/' . $pengajuanTpp->berkas_tpp) }}"
+                                                target="_blank"
+                                                class="inline-flex items-center justify-center w-full sm:w-auto px-3 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase hover:bg-blue-600">
+                                                Lihat Berkas
+                                            </a>
+                                        @else
+                                            <span class="text-xs text-red-500 block text-center sm:text-right">Berkas
+                                                tidak ditemukan</span>
+                                        @endif
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                                     </div>
                                 </div>
                             </div>

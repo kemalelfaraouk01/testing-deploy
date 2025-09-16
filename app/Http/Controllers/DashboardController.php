@@ -22,7 +22,11 @@ class DashboardController extends Controller
             'Admin',
             'Kepala OPD',
             'Kepala Bidang',
+<<<<<<< HEAD
             'Operator TPP',
+=======
+            'Pengelola',
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
             'Verifikasi TPP',
             'Verif Cuti Kabid',
             'Verif Cuti KaOPD',

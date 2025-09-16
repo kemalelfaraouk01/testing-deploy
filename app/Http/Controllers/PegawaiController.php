@@ -25,24 +25,35 @@ class PegawaiController extends Controller
         $user = auth()->user();
         $query = Pegawai::with('user')->where(function ($q) {
             $q->where('status_kepegawaian', '!=', 'Pensiun')
+<<<<<<< HEAD
                 ->orWhereNull('status_kepegawaian');
+=======
+              ->orWhereNull('status_kepegawaian');
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
         })->latest();
         $namaOpd = 'Semua OPD'; // Default
         $opds = collect(); // Default ke koleksi kosong
         $selectedOpdId = $request->input('opd_id');
+<<<<<<< HEAD
         $searchNama = $request->input('search_nama');
         $searchStatus = $request->input('status_kepegawaian'); // Ambil status dari request
+=======
+        $searchNama = $request->input('search_nama'); // Data dari input pencarian nama
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
 
         // Terapkan filter pencarian nama jika ada
         if ($searchNama) {
             $query->where('nama_lengkap', 'like', '%' . $searchNama . '%');
         }
 
+<<<<<<< HEAD
         // Terapkan filter status jika ada
         if ($searchStatus) {
             $query->where('status_kepegawaian', $searchStatus);
         }
 
+=======
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
         if ($user->hasRole('Admin')) {
             $opds = Opd::orderBy('nama_opd')->get();
 
@@ -65,9 +76,14 @@ class PegawaiController extends Controller
         }
 
         $pegawais = $query->paginate(10)->withQueryString();
+<<<<<<< HEAD
         $statuses = Pegawai::$selectable_statuses; // Ambil daftar status
 
         return view('pegawai.index', compact('pegawais', 'namaOpd', 'opds', 'selectedOpdId', 'searchNama', 'statuses', 'searchStatus'));
+=======
+
+        return view('pegawai.index', compact('pegawais', 'namaOpd', 'opds', 'selectedOpdId', 'searchNama'));
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
     }
 
     public function show(Pegawai $pegawai)
@@ -288,7 +304,11 @@ class PegawaiController extends Controller
      */
     public function indexPensiun(Request $request)
     {
+<<<<<<< HEAD
         $query = Pegawai::with(['user', 'pensiun'])->where('status_kepegawaian', 'Pensiun')->latest();
+=======
+        $query = Pegawai::with('user')->where('status_kepegawaian', 'Pensiun')->latest();
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
 
         $searchNama = $request->input('search_nama');
         if ($searchNama) {

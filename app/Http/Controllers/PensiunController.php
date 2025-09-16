@@ -60,7 +60,10 @@ class PensiunController extends Controller
         $pegawai = Pegawai::find($request->pegawai_id);
         if ($pegawai && $pegawai->user) {
             $pegawai->user->notify(new PensiunDiajukanNotification($pensiun));
+<<<<<<< HEAD
             $pegawai->user->limitNotifications();
+=======
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
         }
 
         return redirect()->route('pensiun.index')
@@ -163,11 +166,15 @@ class PensiunController extends Controller
 
         if ($pensiun->pegawai && $pensiun->pegawai->user) {
             $pensiun->pegawai->user->notify(new PensiunPerluPerbaikanNotification($pensiun));
+<<<<<<< HEAD
             $pensiun->pegawai->user->limitNotifications();
+=======
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
         }
 
         return redirect()->route('pensiun.index')->with('success', 'Permintaan perbaikan telah dikirim ke pegawai.');
     }
+<<<<<<< HEAD
 
     /**
      * Menampilkan halaman untuk mengecek status pensiun semua pegawai berdasarkan usia.
@@ -185,4 +192,6 @@ class PensiunController extends Controller
 
         return view('pensiun.cek_status', compact('pegawais'));
     }
+=======
+>>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
 }
