@@ -111,11 +111,7 @@
                                         lengkapi berkas yang diperlukan.
                                     </p>
                                     <div class="mt-4">
-<<<<<<< HEAD
-                                        <a href="{{ route('satyalancana.berkas.show', ['satyalancana' => $tugasSatyalancana->id]) }}"
-=======
-                                        <a href="{{ route('berkas-satyalancana.create', ['satyalancana' => $tugasSatyalancana->id, 'hash' => $tugasSatyalancana->getRouteHash()]) }}"
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
+                                        <a href="{{ route('satyalancana.berkas.show', $tugasSatyalancana->id) }}"
                                             class="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-semibold rounded-lg hover:bg-orange-700">
                                             Lengkapi Berkas Sekarang
                                         </a>
@@ -462,3 +458,4 @@
         </div>
     </div>
 </x-app-layout>
+>

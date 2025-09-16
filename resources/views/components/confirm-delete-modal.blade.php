@@ -1,10 +1,5 @@
 @props(['show' => false])
 
-<<<<<<< HEAD
-<div x-show="{{ $show }}" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div @click.away="{{ $show }} = false" class="fixed inset-0 bg-black/60"></div>
-    <div class="relative w-full max-w-md mx-auto overflow-hidden rounded-2xl bg-white shadow-xl transform transition-all">
-=======
 <div x-data="{ show: false, action: '', hash: '' }" x-show="show" @keydown.escape.window="show = false"
     x-on:open-delete-modal.window="show = true; action = event.detail.action; hash = event.detail.hash" style="display: none;"
     class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
@@ -19,7 +14,6 @@
         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
         <div class="p-6">
             <div class="flex flex-col items-center text-center">
                 <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
@@ -31,11 +25,6 @@
                 </p>
             </div>
         </div>
-<<<<<<< HEAD
-        <div class="bg-gray-50 px-6 py-4 flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
-            <button @click="{{ $show }} = false" type="button" class="mt-2 sm:mt-0 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto sm:text-sm">
-=======
-
         <div class="flex flex-row-reverse space-x-2 space-x-reverse bg-gray-50 px-6 py-3">
             <form x-bind:action="action" method="POST">
                 @csrf
@@ -48,16 +37,8 @@
             </form>
             <button @click="show = false" type="button"
                 class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                 Batal
             </button>
-            <form action="{{ route('notifications.clearAll') }}" method="POST" class="w-full sm:w-auto">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm">
-                    Ya, Hapus Semua
-                </button>
-            </form>
         </div>
     </div>
 </div>

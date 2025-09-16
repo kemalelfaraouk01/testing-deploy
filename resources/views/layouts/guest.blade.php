@@ -14,11 +14,7 @@
         .header {
             position: relative;
             text-align: center;
-<<<<<<< HEAD
-            background: linear-gradient(135deg, #667eea 0%, #38a169 100%);
-=======
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
             color: white;
             min-height: 100vh;
             display: flex;

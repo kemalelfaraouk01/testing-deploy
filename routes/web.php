@@ -18,10 +18,7 @@ use App\Http\Controllers\BerkasSatyalancanaController;
 use App\Http\Controllers\VerifikasiSatyalancanaController;
 use App\Http\Controllers\PensiunController;
 use App\Http\Controllers\BerkasPensiunController; // <-- Import baru
-<<<<<<< HEAD
 use App\Http\Controllers\NotificationController;
-=======
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
 use App\Http\Controllers\OpdController;       // <-- Tambahkan ini di bagian atas
 use App\Http\Controllers\JabatanController;
 
@@ -149,10 +146,7 @@ Route::middleware('auth')->group(function () {
 
     // --- RUTE PENSIUN ---
     Route::middleware(['role:Admin|Pengelola Pensiun'])->group(function () {
-<<<<<<< HEAD
         Route::get('pensiun/cek-status', [PensiunController::class, 'cekStatus'])->name('pensiun.cek-status');
-=======
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
         Route::resource('pensiun', PensiunController::class);
         Route::patch('pensiun/{pensiun}/approve', [PensiunController::class, 'approve'])->name('pensiun.approve');
         Route::post('pensiun/{pensiun}/request-correction', [PensiunController::class, 'requestCorrection'])->name('pensiun.request-correction');

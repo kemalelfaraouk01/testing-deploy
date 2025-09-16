@@ -23,11 +23,7 @@ class UserController extends Controller
             });
         }
 
-<<<<<<< HEAD
-        $users = $query->with('roles')->oldest()->paginate(10)->withQueryString();
-=======
         $users = $query->with('roles')->latest()->paginate(10)->withQueryString();
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
 
         return view('users.index', compact('users'));
     }

@@ -5,7 +5,6 @@
         </h2>
     </x-slot>
 
-<<<<<<< HEAD
     <div class="py-6 lg:py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-xl shadow-lg border border-gray-200">
@@ -17,50 +16,6 @@
                         Daftar Pengajuan TPP Menunggu Verifikasi
                     </h3>
                     <p class="text-sm text-gray-600 mt-1">Berikut adalah semua pengajuan yang memerlukan tindakan Anda.</p>
-=======
-    <div class="py-6 sm:py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <h3 class="text-base sm:text-lg font-bold text-gray-800 border-b pb-2 mb-4">
-                    Daftar Pengajuan Masuk
-                </h3>
-
-                <!-- Desktop Table View -->
-                <div class="hidden md:block overflow-x-auto">
-                    <table class="min-w-full bg-white">
-                        <thead class="bg-gray-100 text-gray-600">
-                            <tr>
-                                <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Periode</th>
-                                <th class="text-left py-3 px-4 uppercase font-semibold text-sm">OPD Pengaju</th>
-                                <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Tgl Diajukan</th>
-                                <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-gray-700">
-                            @forelse ($pengajuanTpps as $pengajuan)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="py-3 px-4">{{ $daftarBulan[$pengajuan->periode_bulan] }}
-                                        {{ $pengajuan->periode_tahun }}</td>
-                                    <td class="py-3 px-4">{{ $pengajuan->opd?->nama_opd ?? '[OPD tidak ditemukan]' }}</td>
-                                    <td class="py-3 px-4">{{ $pengajuan->created_at->translatedFormat('d M Y, H:i') }}
-                                    </td>
-                                    <td class="text-center py-3 px-4">
-                                        <a href="{{ route('verifikasi-tpp.show', ['pengajuanTpp' => $pengajuan->id, 'hash' => $pengajuan->getRouteHash()]) }}"
-                                            class="inline-flex items-center px-3 py-1 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase hover:bg-blue-600 transition-colors duration-200">
-                                            Lihat & Proses Berkas
-                                        </a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center py-8 text-gray-500">
-                                        Tidak ada pengajuan yang perlu diverifikasi saat ini.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                 </div>
 
                 <div class="p-6">
@@ -99,7 +54,6 @@
                             </table>
                         </div>
 
-<<<<<<< HEAD
                         <!-- Mobile Card View -->
                         <div class="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-6">
                             @foreach ($pengajuanTpps as $pengajuan)
@@ -122,13 +76,6 @@
                                             Verifikasi Sekarang
                                         </a>
                                     </div>
-=======
-                                <!-- OPD -->
-                                <div class="mb-3">
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">OPD
-                                        Pengaju</p>
-                                    <p class="text-sm text-gray-900">{{ $pengajuan->opd?->nama_opd ?? '[OPD tidak ditemukan]' }}</p>
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                                 </div>
                             @endforeach
                         </div>
@@ -142,36 +89,10 @@
                         </div>
                     @endif
 
-<<<<<<< HEAD
                     @if ($pengajuanTpps->hasPages())
                         <div class="mt-8 flex justify-center">
                             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-2">
                                 {{ $pengajuanTpps->links() }}
-=======
-                                <!-- Tanggal -->
-                                <div class="mb-4">
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">Tanggal
-                                        Diajukan</p>
-                                    <p class="text-sm text-gray-900">
-                                        {{ $pengajuan->created_at->translatedFormat('d M Y, H:i') }}</p>
-                                </div>
-
-                                <!-- Action Button -->
-                                <div class="pt-3 border-t border-gray-100">
-                                    <a href="{{ route('verifikasi-tpp.show', ['pengajuanTpp' => $pengajuan->id, 'hash' => $pengajuan->getRouteHash()]) }}"
-                                        class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-sm text-white uppercase hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                            </path>
-                                        </svg>
-                                        Lihat & Proses Berkas
-                                    </a>
-                                </div>
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
                             </div>
                         </div>
                     @endif

@@ -16,12 +16,12 @@
     @php
         if (Auth::check()) {
             // Ambil 5 notifikasi terbaru, baik yang sudah dibaca maupun belum
-            $notifications = auth()->user()->notifications()->latest()->take(5)->get();
+            $notificationsForLayout = auth()->user()->notifications()->latest()->take(5)->get();
             // Hitung notifikasi yang belum dibaca secara terpisah untuk badge
-            $unreadNotificationsCount = auth()->user()->unreadNotifications()->count();
+            $unreadNotificationsCountForLayout = auth()->user()->unreadNotifications()->count();
         } else {
-            $notifications = collect();
-            $unreadNotificationsCount = 0;
+            $notificationsForLayout = collect();
+            $unreadNotificationsCountForLayout = 0;
         }
     @endphp
 
@@ -53,66 +53,10 @@
                             </div>
                             <div class="flex items-center space-x-2">
 
-<<<<<<< HEAD
                                 <div x-data="notificationBell" x-init="init({{ json_encode($notificationsForLayout) }}, {{ $unreadNotificationsCountForLayout }})" id="notification-component"
                                     data-turbo-permanent class="flex items-center space-x-2">
 
                                     <x-confirm-delete-modal show="showNotificationDeleteModal" />
-=======
-                                <x-dropdown align="right" width="80">
-                                    <x-slot name="trigger">
-                                        <button
-                                            class="relative inline-flex items-center p-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-600 bg-white hover:text-gray-800 focus:outline-none transition ease-in-out duration-150">
-                                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                            </svg>
-                                            @if ($notifications->isNotEmpty())
-                                                <span
-                                                    class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-                                            @endif
-                                        </button>
-                                    </x-slot>
-                                    <x-slot name="content">
-                                        <div class="px-4 py-2 font-bold border-b">Notifikasi</div>
-                                        @forelse($notifications as $notification)
-                                            @php
-                                                $link = '#'; // Default link
-
-                                                // Prioritaskan URL dari data notifikasi jika ada
-                                                if (isset($notification->data['url'])) {
-                                                    $link = $notification->data['url'];
-                                                } 
-                                                // Fallback untuk notifikasi lama
-                                                elseif (isset($notification->data['pengajuan_id'])) {
-                                                    $link = route('pengajuan-tpp.show', $notification->data['pengajuan_id']);
-                                                } elseif (isset($notification->data['satyalancana_id'])) {
-                                                    $link = route('satyalancana.berkas.show', $notification->data['satyalancana_id']);
-                                                }
-                                            @endphp
-
-                                            <x-dropdown-link :href="$link"
-                                                title="{{ $notification->data['message'] }}">
-                                                <p class="text-sm font-medium text-gray-900 truncate">
-                                                    {{ $notification->data['message'] }}
-                                                </p>
-                                                @if (isset($notification->data['catatan']))
-                                                    <p class="text-xs text-red-600 mt-1" title="{{ $notification->data['catatan'] }}">
-                                                        Catatan: {{ Str::limit($notification->data['catatan'], 50) }}
-                                                    </p>
-                                                @endif
-                                                <p class="text-xs text-gray-500 mt-1">
-                                                    {{ \Carbon\Carbon::parse($notification->created_at)->diffForHumans() }}
-                                                </p>
-                                            </x-dropdown-link>
-                                        @empty
-                                            <div class="px-4 py-3 text-sm text-center text-gray-500">Tidak ada
-                                                notifikasi baru.</div>
-                                        @endforelse
-                                    </x-slot>
-                                </x-dropdown>
->>>>>>> 82e007e84e5692e3a77758ea4a1d8379eb8fc049
 
                                     <x-dropdown align="right" width="80">
                                         <x-slot name="trigger">

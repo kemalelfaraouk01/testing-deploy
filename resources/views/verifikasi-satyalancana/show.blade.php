@@ -195,17 +195,7 @@
                             @if (in_array($satyalancana->status, ['diusulkan', 'berkas_lengkap', 'menunggu_kelengkapan_berkas']))
                                 <div>
                                     <p class="text-sm font-medium text-gray-500 mb-2">Pilih Tindakan</p>
-                                    <div class="space-y-3">
-                                        <button
-                                            @click="openModal('approve', 'Konfirmasi Persetujuan', '{{ route('verifikasi-satyalancana.approve', $satyalancana->id) }}')"
-                                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 border border-transparent rounded-lg font-semibold text-sm text-white transition-all duration-200 transform hover:scale-105 active:scale-95">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 13l4 4L19 7" />
-                                            </svg>
-                                            Setujui Usulan
-                                        </button>
+                                    <div class="grid grid-cols-2 gap-3">
                                         <button
                                             @click="openModal('reject', 'Konfirmasi Penolakan', '{{ route('verifikasi-satyalancana.reject', $satyalancana->id) }}')"
                                             class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-red-50 border border-red-300 rounded-lg font-semibold text-sm text-red-600 transition-all duration-200 transform hover:scale-105 active:scale-95">
@@ -214,7 +204,17 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                                             </svg>
-                                            Kembalikan untuk Perbaikan
+                                            Kembalikan
+                                        </button>
+                                        <button
+                                            @click="openModal('approve', 'Konfirmasi Persetujuan', '{{ route('verifikasi-satyalancana.approve', $satyalancana->id) }}')"
+                                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 border border-transparent rounded-lg font-semibold text-sm text-white transition-all duration-200 transform hover:scale-105 active:scale-95">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Setujui
                                         </button>
                                     </div>
                                 </div>
