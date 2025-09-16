@@ -43,7 +43,7 @@ class PengajuanTppController extends Controller
 
         if ($user->hasRole('Admin')) {
             $opds = Opd::orderBy('nama_opd')->get();
-        } elseif ($user->hasRole('Pengelola')) {
+        } elseif ($user->hasRole('Operator TPP')) {
             if ($user->pegawai && $user->pegawai->opd_id) {
                 $opds = Opd::where('id', $user->pegawai->opd_id)->get();
                 $query->where('opd_id', $user->pegawai->opd_id);
@@ -81,90 +81,52 @@ class PengajuanTppController extends Controller
             'opd_id' => 'required|exists:opds,id',
         ]);
 
-        // === PENAMBAHAN VALIDASI PENCEGAHAN DUPLIKAT ===
-        $existingPengajuan = PengajuanTpp::where('periode_bulan', $validated['bulan'])
-            ->where('periode_tahun', $validated['tahun'])
-            ->where('opd_id', $validated['opd_id'])
-            ->first();
+        // Cari atau buat baru dengan status 'draft'.
+        $pengajuan = PengajuanTpp::firstOrCreate(
+            [
+                'periode_bulan' => $validated['bulan'],
+                'periode_tahun' => $validated['tahun'],
+                'opd_id' => $validated['opd_id'],
+            ],
+            [
+                'status' => 'draft',
+                'user_id' => Auth::id(), // Simpan siapa yang membuat draft
+                'besaran_tpp_diajukan' => 0,
+            ]
+        );
 
-        if ($existingPengajuan) {
-            return redirect()->route('pengajuan-tpp.index')
-                ->with('error', 'Pengajuan TPP untuk periode dan OPD tersebut sudah pernah dibuat sebelumnya.');
-        }
-        // ===============================================
-
-        $bulan = $validated['bulan'];
-        $tahun = $validated['tahun'];
-        $opd_id = $validated['opd_id'];
-
-        $stringToHash = "{$bulan}-{$tahun}-{$opd_id}";
-        $hash = hash_hmac('sha256', $stringToHash, config('app.key'));
-
-        return redirect()->route('pengajuan-tpp.create', [
-            'bulan' => $bulan,
-            'tahun' => $tahun,
-            'opd_id' => $opd_id,
-            'hash' => $hash
-        ]);
+        // Arahkan ke halaman untuk melengkapi berkas.
+        return redirect()->route('pengajuan-tpp.lengkapi-berkas', $pengajuan->id);
     }
 
-    public function create(Request $request)
+    public function lengkapiBerkasForm(PengajuanTpp $pengajuanTpp)
     {
-        $validated = $request->validate([
-            'bulan' => 'required|integer|min:1|max:12',
-            'tahun' => 'required|integer',
-            'opd_id' => 'required|exists:opds,id',
-            'hash' => 'required|string',
-        ]);
+        $this->authorize('update', $pengajuanTpp);
 
-        $stringToHash = "{$validated['bulan']}-{$validated['tahun']}-{$validated['opd_id']}";
-        $expectedHash = hash_hmac('sha256', $stringToHash, config('app.key'));
-
-        if (!hash_equals($expectedHash, $validated['hash'])) {
-            abort(403, 'URL TIDAK VALID: Tanda tangan digital tidak cocok.');
+        if ($pengajuanTpp->status !== 'draft') {
+            return redirect()->route('pengajuan-tpp.index')->with('error', 'Pengajuan ini sudah dikirim dan tidak bisa diubah lagi.');
         }
 
-        $user = Auth::user();
-        if ($user->hasRole('Pengelola')) {
-            $opdIdPengelola = $user->pegawai->opd_id ?? null;
-            if ($opdIdPengelola != $validated['opd_id']) {
-                abort(403, 'AKSES DITOLAK: Anda tidak berwenang mengajukan TPP untuk OPD ini.');
-            }
-        }
+        $opd = $pengajuanTpp->opd;
+        $namaBulan = $this->daftarBulan[$pengajuanTpp->periode_bulan];
 
-        $opd = Opd::findOrFail($validated['opd_id']);
-        $namaBulan = $this->daftarBulan[$validated['bulan']];
-
-        return view('pengajuan-tpp.create', [
-            'bulan' => $validated['bulan'],
-            'tahun' => $validated['tahun'],
+        return view('pengajuan-tpp.lengkapi-berkas', [
+            'pengajuanTpp' => $pengajuanTpp,
             'opd' => $opd,
             'namaBulan' => $namaBulan,
         ]);
     }
 
-    // app/Http/Controllers/PengajuanTppController.php
-
-    public function store(Request $request)
+    public function submitBerkas(Request $request, PengajuanTpp $pengajuanTpp)
     {
-        // === PERUBAHAN VALIDASI FILE DI SINI ===
+        $this->authorize('update', $pengajuanTpp);
+
         $validatedData = $request->validate([
-            'bulan' => 'required|integer|min:1|max:12',
-            'tahun' => 'required|integer|min:2020|max:2100',
-            'opd_id' => 'required|exists:opds,id',
             'berkas_tpp' => 'required|file|mimes:pdf|max:1024',
             'berkas_spj' => 'required|file|mimes:pdf|max:1024',
             'berkas_pernyataan' => 'required|file|mimes:pdf|max:1024',
             'berkas_pengantar' => 'required|file|mimes:pdf|max:1024',
         ]);
-        // =======================================
-
-        $user = Auth::user();
-        $dataToCreate = $validatedData;
-
-        if ($user->hasRole('Pengelola')) {
-            $dataToCreate['opd_id'] = optional($user->pegawai)->opd_id;
-        }
 
         $paths = [];
         $fileFields = ['berkas_tpp', 'berkas_spj', 'berkas_pernyataan', 'berkas_pengantar'];
@@ -174,20 +136,12 @@ class PengajuanTppController extends Controller
             }
         }
 
-        $pengajuan = PengajuanTpp::create([
-            'periode_bulan' => $dataToCreate['bulan'],
-            'periode_tahun' => $dataToCreate['tahun'],
-            'opd_id' => $dataToCreate['opd_id'],
-            'besaran_tpp_diajukan' => 0,
+        $pengajuanTpp->update(array_merge($paths, [
             'status' => 'diajukan',
-            'berkas_tpp' => $paths['berkas_tpp'] ?? null,
-            'berkas_spj' => $paths['berkas_spj'] ?? null,
-            'berkas_pernyataan' => $paths['berkas_pernyataan'] ?? null,
-            'berkas_pengantar' => $paths['berkas_pengantar'] ?? null,
-        ]);
+        ]));
 
         $verifikator = User::role(['Admin', 'Verifikasi TPP'])->get();
-        Notification::send($verifikator, new TppDiajukanNotification($pengajuan));
+        Notification::send($verifikator, new TppDiajukanNotification($pengajuanTpp));
 
         return redirect()->route('pengajuan-tpp.index')
             ->with('success', 'Berkas TPP berhasil diajukan.');
@@ -195,13 +149,26 @@ class PengajuanTppController extends Controller
 
     public function show(Request $request, PengajuanTpp $pengajuanTpp)
     {
-        if (!hash_equals($pengajuanTpp->getRouteHash(), $request->hash)) {
+        // Jika hash tidak ada, izinkan jika user punya peran.
+        // Ini untuk menangani notifikasi lama yang tidak punya hash.
+        if ($request->hash === null) {
+            if (!$request->user()->hasAnyRole(['Admin', 'Pengelola', 'Verifikasi TPP'])) {
+                abort(403, 'AKSES DITOLAK.');
+            }
+        } 
+        // Jika hash ada, validasi seperti biasa.
+        elseif (!hash_equals($pengajuanTpp->getRouteHash(), $request->hash)) {
             abort(403, 'URL TIDAK VALID.');
         }
 
+        // Eager load relasi OPD untuk memastikan data tersedia di view
+        $pengajuanTpp->load('opd');
+        $namaOpd = $pengajuanTpp->opd ? $pengajuanTpp->opd->nama_opd : '[OPD tidak ditemukan]';
+
         return view('pengajuan-tpp.show', [
             'pengajuanTpp' => $pengajuanTpp,
-            'daftarBulan' => $this->daftarBulan
+            'daftarBulan' => $this->daftarBulan,
+            'namaOpd' => $namaOpd
         ]);
     }
 

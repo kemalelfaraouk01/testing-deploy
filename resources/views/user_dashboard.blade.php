@@ -33,6 +33,62 @@
                 </div>
             </div>
 
+            {{-- TUGAS: Perbaikan Berkas Pensiun --}}
+            @if (isset($tugasPensiun) && $tugasPensiun)
+                <div class="mb-6 bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex items-start space-x-5">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                @if ($tugasPensiun->status == 'Menunggu Berkas')
+                                    <h3 class="text-lg font-bold text-gray-800">Tugas: Lengkapi Berkas Pensiun</h3>
+                                    <p class="mt-1 text-sm text-gray-600">
+                                        Anda telah diusulkan untuk pensiun. Mohon segera lengkapi berkas persyaratan
+                                        yang diperlukan.
+                                    </p>
+                                    <div class="mt-5">
+                                        <a href="{{ route('berkas-pensiun.create', ['pensiun' => $tugasPensiun->id, 'hash' => $tugasPensiun->getRouteHash()]) }}"
+                                            class="inline-flex items-center px-5 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 shadow-md hover:shadow-lg transition-all duration-300">
+                                            Lengkapi Berkas Sekarang
+                                        </a>
+                                    </div>
+                                @elseif ($tugasPensiun->status == 'Perlu Perbaikan')
+                                    <h3 class="text-lg font-bold text-gray-800">Tugas: Perbaikan Berkas Pensiun</h3>
+                                    <p class="mt-1 text-sm text-gray-600">
+                                        Terdapat permintaan perbaikan untuk usulan pensiun Anda. Mohon periksa catatan
+                                        dan unggah kembali berkas yang sesuai.
+                                    </p>
+
+                                    {{-- Integrated Note Section --}}
+                                    <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                        <p class="font-semibold text-sm text-red-800">Catatan dari Operator:</p>
+                                        <p class="mt-1 text-sm text-red-700">"{{ $tugasPensiun->catatan_perbaikan }}"
+                                        </p>
+                                    </div>
+
+                                    <div class="mt-5">
+                                        <a href="{{ route('berkas-pensiun.create', ['pensiun' => $tugasPensiun->id, 'hash' => $tugasPensiun->getRouteHash()]) }}"
+                                            class="inline-flex items-center px-5 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 shadow-md hover:shadow-lg transition-all duration-300">
+                                            Perbaiki Berkas Sekarang
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- TUGAS: Satyalancana --}}
             @if (isset($tugasSatyalancana) && $tugasSatyalancana)
                 <div class="mb-6">
                     <div class="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl p-6">
@@ -46,19 +102,36 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-base font-semibold text-orange-800">Tugas: Lengkapi Berkas Satyalancana
-                                </h3>
-                                <p class="mt-1 text-sm text-orange-700">
-                                    Anda telah diusulkan untuk menerima penghargaan
-                                    <strong>{{ $tugasSatyalancana->jenis_penghargaan }}</strong>. Mohon segera lengkapi
-                                    berkas yang diperlukan.
-                                </p>
-                                <div class="mt-4">
-                                    <a href="{{ route('berkas-satyalancana.create', $tugasSatyalancana->id) }}"
-                                        class="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-semibold rounded-lg hover:bg-orange-700">
-                                        Lengkapi Berkas Sekarang
-                                    </a>
-                                </div>
+                                @if ($tugasSatyalancana->status == 'menunggu_kelengkapan_berkas')
+                                    <h3 class="text-base font-semibold text-orange-800">Tugas: Lengkapi Berkas
+                                        Satyalancana</h3>
+                                    <p class="mt-1 text-sm text-orange-700">
+                                        Anda telah diusulkan untuk menerima penghargaan
+                                        <strong>{{ $tugasSatyalancana->jenis_penghargaan }}</strong>. Mohon segera
+                                        lengkapi berkas yang diperlukan.
+                                    </p>
+                                    <div class="mt-4">
+                                        <a href="{{ route('satyalancana.berkas.show', ['satyalancana' => $tugasSatyalancana->id]) }}"
+                                            class="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-semibold rounded-lg hover:bg-orange-700">
+                                            Lengkapi Berkas Sekarang
+                                        </a>
+                                    </div>
+                                @elseif ($tugasSatyalancana->status == 'perlu_perbaikan')
+                                    <h3 class="text-base font-semibold text-orange-800">Tugas: Perbaikan Berkas
+                                        Satyalancana</h3>
+                                    <p class="mt-1 text-sm text-orange-700">
+                                        Terdapat permintaan perbaikan untuk usulan Satyalancana Anda. Mohon periksa
+                                        catatan dan perbarui berkas yang sesuai.
+                                    </p>
+                                    <p class="mt-2 text-sm text-gray-600 italic border-l-4 border-gray-300 pl-3">
+                                        "{{ $tugasSatyalancana->keterangan }}"</p>
+                                    <div class="mt-4">
+                                        <a href="{{ route('satyalancana.berkas.show', ['satyalancana' => $tugasSatyalancana->id, 'hash' => $tugasSatyalancana->getRouteHash()]) }}"
+                                            class="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-semibold rounded-lg hover:bg-orange-700">
+                                            Perbaiki Berkas Sekarang
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -209,7 +282,7 @@
                                     </div>
                                 </a>
 
-                                @role('Pengelola')
+                                @role('Operator TPP')
                                     {{-- Pengajuan TPP --}}
                                     <a href="{{ route('pengajuan-tpp.index') }}"
                                         class="group p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-md transition-all duration-200">
@@ -379,32 +452,7 @@
                 </div>
 
                 {{-- Right Column: Info Panel --}}
-                <div class="space-y-6">
-                    {{-- Informasi Penting --}}
-                    <div class="bg-white overflow-hidden shadow-lg rounded-xl">
-                        <div class="p-4 sm:p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Penting</h3>
-                            <div class="space-y-3">
-                                <div class="p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
-                                    <p class="text-sm text-blue-700 font-medium">Pengumuman</p>
-                                    <p class="text-xs text-blue-600 mt-1">Jadwal evaluasi kinerja bulan depan</p>
-                                </div>
 
-                                <div class="p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-                                    <p class="text-sm text-yellow-700 font-medium">Reminder</p>
-                                    <p class="text-xs text-yellow-600 mt-1">Jangan lupa update data keluarga</p>
-                                </div>
-
-                                <div class="p-3 bg-green-50 border-l-4 border-green-400 rounded">
-                                    <p class="text-sm text-green-700 font-medium">Info</p>
-                                    <p class="text-xs text-green-600 mt-1">Sistem maintenance Sabtu malam</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
             </div>
 
         </div>

@@ -35,4 +35,12 @@ class Satyalancana extends Model
     {
         return $this->belongsTo(User::class, 'diverifikasi_oleh');
     }
+
+    /**
+     * Membuat hash unik untuk URL.
+     */
+    public function getRouteHash(): string
+    {
+        return hash_hmac('sha256', "satyalancana-id:{$this->id}", config('app.key'));
+    }
 }

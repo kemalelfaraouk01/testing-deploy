@@ -41,11 +41,13 @@ class SatyalancanaController extends Controller
             elseif ($masaKerja >= 10) $eligible['x'][] = $data;
         }
 
-        // Kirim informasi periode ke view
-        $periodeAktif = $this->getPeriodeAktif();
-        $isPeriodeDibuka = !is_null($periodeAktif);
+        // Daftar periode untuk dipilih secara manual oleh operator
+        $daftarPeriode = [
+            "Agustus {$tahunIni}" => "Agustus {$tahunIni}",
+            "November {$tahunIni}" => "November {$tahunIni}",
+        ];
 
-        return view('satyalancana.index', compact('eligible', 'periodeAktif', 'isPeriodeDibuka'));
+        return view('satyalancana.index', compact('eligible', 'daftarPeriode'));
     }
 
     /**
@@ -85,6 +87,7 @@ class SatyalancanaController extends Controller
                 $pegawai = Pegawai::find($pegawaiId);
                 if ($pegawai && $pegawai->user) {
                     Notification::send($pegawai->user, new SatyalancanaDiajukanNotification($usulan));
+                    $pegawai->user->limitNotifications();
                 }
                 $berhasil++;
             }
@@ -101,35 +104,14 @@ class SatyalancanaController extends Controller
      */
     public function myProposals()
     {
-        $pegawaiId = Auth::user()->pegawai->id;
+        $user = Auth::user();
 
-        // ▼▼▼ PERBAIKAN UTAMA DI SINI: Ganti get() menjadi paginate() ▼▼▼
-        $usulans = Satyalancana::where('pegawai_id', $pegawaiId)
-            ->latest()
-            ->paginate(10); // Mengambil 10 data per halaman
-        // ▲▲▲ BATAS AKHIR PERBAIKAN ▲▲▲
+        $usulans = Satyalancana::whereHas('pegawai', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+        ->latest()
+        ->paginate(10);
 
-        $periodeAktif = $this->getPeriodeAktif();
-        $bisaMengajukan = !is_null($periodeAktif);
-
-        return view('satyalancana.my-proposals', compact('usulans', 'periodeAktif', 'bisaMengajukan'));
-    }
-    private function getPeriodeAktif()
-    {
-        $sekarang = Carbon::now();
-        $tahun = $sekarang->year;
-        $bulan = $sekarang->month;
-
-        // Periode Agustus (dibuka selama bulan Agustus)
-        if ($bulan == 8) {
-            return "Agustus " . $tahun;
-        }
-
-        // Periode November (dibuka selama bulan November)
-        if ($bulan == 11) {
-            return "November " . $tahun;
-        }
-
-        return null; // Tidak ada periode aktif
+        return view('satyalancana.my-proposals', compact('usulans'));
     }
 }

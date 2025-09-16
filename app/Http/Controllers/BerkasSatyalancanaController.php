@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Satyalancana;
 use App\Models\User;
-use App\Notifications\BerkasSatyalancanaLengkapNotification; // Kita akan buat notifikasi ini
+use App\Notifications\BerkasSatyalancanaLengkapNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
@@ -19,9 +19,11 @@ class BerkasSatyalancanaController extends Controller
     public function show(Satyalancana $satyalancana): View
     {
         // Keamanan: pastikan hanya pegawai yang bersangkutan yang bisa akses
-        if ($satyalancana->pegawai_id !== Auth::user()->pegawai->id) {
+        $user = Auth::user();
+        if (!$user->pegawai || $satyalancana->pegawai_id !== $user->pegawai->id) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
+
         return view('satyalancana.lengkapi-berkas', compact('satyalancana'));
     }
 
@@ -36,14 +38,14 @@ class BerkasSatyalancanaController extends Controller
         }
 
         $validatedData = $request->validate([
-            'file_drh' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'file_sk_cpns' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'file_sk_pangkat_terakhir' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'file_sk_jabatan_terakhir' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'file_surat_pernyataan_disiplin' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'file_skp' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'file_sptjm' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
-            'file_piagam_sebelumnya' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+            'file_drh' => 'nullable|file|mimes:pdf,jpg,png|max:1024',
+            'file_sk_cpns' => 'nullable|file|mimes:pdf,jpg,png|max:1024',
+            'file_sk_pangkat_terakhir' => 'nullable|file|mimes:pdf,jpg,png|max:1024',
+            'file_sk_jabatan_terakhir' => 'nullable|file|mimes:pdf,jpg,png|max:1024',
+            'file_surat_pernyataan_disiplin' => 'nullable|file|mimes:pdf,jpg,png|max:1024',
+            'file_skp' => 'nullable|file|mimes:pdf,jpg,png|max:1024',
+            'file_sptjm' => 'nullable|file|mimes:pdf,jpg,png|max:1024',
+            'file_piagam_sebelumnya' => 'nullable|file|mimes:pdf,jpg,png|max:1024',
         ]);
 
         $paths = [];

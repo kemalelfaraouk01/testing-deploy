@@ -35,12 +35,18 @@ class TppDiajukanNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        $url = route('pengajuan-tpp.show', [
+            'pengajuanTpp' => $this->pengajuanTpp->id,
+            'hash' => $this->pengajuanTpp->getRouteHash()
+        ]);
+
         return [
             'pengajuan_id' => $this->pengajuanTpp->id,
             'opd_nama' => $this->pengajuanTpp->opd->nama_opd,
             'periode_bulan' => $this->pengajuanTpp->periode_bulan,
             'periode_tahun' => $this->pengajuanTpp->periode_tahun,
-            'message' => 'Pengajuan TPP baru dari ' . $this->pengajuanTpp->opd->nama_opd . ' telah masuk.'
+            'message' => 'Pengajuan TPP baru dari ' . $this->pengajuanTpp->opd->nama_opd . ' telah masuk.',
+            'url' => $url // Menambahkan URL lengkap
         ];
     }
 }

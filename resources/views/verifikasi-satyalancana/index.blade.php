@@ -100,12 +100,23 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($usulans as $usulan)
+                                    @php
+                                        $status = $usulan->status;
+                                        $statusText = Str::title(str_replace('_', ' ', $status));
+                                        $statusColorClasses = match ($status) {
+                                            'disetujui' => 'bg-green-100 text-green-800',
+                                            'perlu_perbaikan' => 'bg-yellow-100 text-yellow-800',
+                                            'ditolak' => 'bg-red-100 text-red-800',
+                                            'berkas_lengkap', 'diverifikasi' => 'bg-purple-100 text-purple-800',
+                                            default => 'bg-blue-100 text-blue-800',
+                                        };
+                                    @endphp
                                     <tr class="hover:bg-gray-50 transition-colors duration-150">
                                         <td class="px-6 py-4">
                                             <div class="flex items-center space-x-3">
                                                 <div
-                                                    class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
-                                                    <span class="text-blue-600 font-semibold text-sm">
+                                                    class="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                                    <span class="text-gray-600 font-semibold text-sm">
                                                         {{ strtoupper(substr($usulan->pegawai->nama_lengkap, 0, 1)) }}
                                                     </span>
                                                 </div>
@@ -141,22 +152,14 @@
                                                     class="text-gray-900 font-medium">{{ $usulan->created_at->translatedFormat('d M Y') }}</span>
                                             </div>
                                         </td>
-                                        {{-- ▼▼▼ STATUS BARU ▼▼▼ --}}
                                         <td class="px-6 py-4 text-center">
-                                            <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                @if ($usulan->status == 'diusulkan' || $usulan->status == 'menunggu_kelengkapan_berkas') bg-blue-100 text-blue-800
-                                                @elseif($usulan->status == 'berkas_lengkap' || $usulan->status == 'diverifikasi') bg-yellow-100 text-yellow-800
-                                                @elseif($usulan->status == 'disetujui') bg-green-100 text-green-800
-                                                @elseif($usulan->status == 'perlu_perbaikan') bg-orange-100 text-orange-800
-                                                @elseif($usulan->status == 'ditolak') bg-red-100 text-red-800 @endif">
-                                                {{ Str::title(str_replace('_', ' ', $usulan->status)) }}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusColorClasses }}">
+                                                {{ $statusText }}
                                             </span>
                                         </td>
-                                        {{-- ▲▲▲ BATAS AKHIR STATUS BARU ▲▲▲ --}}
                                         <td class="px-6 py-4 text-center">
                                             <a href="{{ route('verifikasi-satyalancana.show', $usulan->id) }}"
-                                                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg">
+                                                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200">
                                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -198,19 +201,11 @@
                                         <div class="font-semibold text-gray-900 mb-1">
                                             {{ $usulan->pegawai->nama_lengkap }}</div>
 
-                                        {{-- ▼▼▼ TAMPILAN STATUS BARU (MOBILE) ▼▼▼ --}}
                                         <div class="mb-2">
-                                            <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                @if ($usulan->status == 'diusulkan' || $usulan->status == 'menunggu_kelengkapan_berkas') bg-blue-100 text-blue-800
-                                                @elseif($usulan->status == 'berkas_lengkap' || $usulan->status == 'diverifikasi') bg-yellow-100 text-yellow-800
-                                                @elseif($usulan->status == 'disetujui') bg-green-100 text-green-800
-                                                @elseif($usulan->status == 'perlu_perbaikan') bg-orange-100 text-orange-800
-                                                @elseif($usulan->status == 'ditolak') bg-red-100 text-red-800 @endif">
-                                                {{ Str::title(str_replace('_', ' ', $usulan->status)) }}
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusColorClasses }}">
+                                                {{ $statusText }}
                                             </span>
                                         </div>
-                                        {{-- ▲▲▲ BATAS AKHIR TAMPILAN STATUS BARU ▲▲▲ --}}
 
                                         <div class="space-y-2">
                                             <div class="flex items-center space-x-2 text-sm text-gray-600">

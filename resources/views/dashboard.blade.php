@@ -1,18 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
-            <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
-                {{ __('Dashboard') }}
-            </h2>
-            <div class="flex items-center justify-end space-x-2 sm:space-x-4">
-                @role('Admin|Kepala Bidang')
-                    {{-- Dropdown Notifikasi --}}
-                @endrole
-                <div class="flex items-center">
-                    {{-- Dropdown User --}}
-                </div>
-            </div>
-        </div>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
     </x-slot>
 
     {{-- ========================================================== --}}

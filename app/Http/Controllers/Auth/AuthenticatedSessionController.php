@@ -18,17 +18,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        // Daftar nama kota yang sesuai dengan nama file gambar Anda
-        $captchaOptions = ['bengkulu', 'curup', 'manna', 'mukomuko', 'kepahiang'];
-
-        // Pilih satu kota secara acak
-        $selectedCaptcha = $captchaOptions[array_rand($captchaOptions)];
-
-        // Simpan jawaban yang benar ke session
-        session(['captcha_answer' => $selectedCaptcha]);
-
-        // Kirim nama file gambar ke view
-        return view('auth.login', ['captcha_image' => $selectedCaptcha . '.png']);
+        return view('auth.login');
     }
 
     /**
@@ -38,19 +28,11 @@ class AuthenticatedSessionController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        // 1. Validasi semua input, termasuk CAPTCHA
         $request->validate([
             'nip' => ['required', 'string'],
             'password' => ['required', 'string'],
-            'image_captcha' => ['required', 'string', function ($attribute, $value, $fail) {
-                if (strtolower($value) !== session('captcha_answer')) {
-                    $fail('Jawaban CAPTCHA tidak cocok.');
-                }
-            }],
+            'captcha' => ['required', 'captcha'],
         ]);
-
-        // Setelah divalidasi, hapus jawaban dari session agar tidak bisa dipakai lagi
-        $request->session()->forget('captcha_answer');
 
         // 2. Logika Rate Limiter (tidak berubah)
         $throttleKey = Str::lower($request->input('nip')) . '|' . $request->ip();

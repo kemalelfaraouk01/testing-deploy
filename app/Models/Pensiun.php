@@ -18,6 +18,22 @@ class Pensiun extends Model
         'tanggal_sk',
         'status',
         'keterangan',
+        'catatan_perbaikan',
+        'berkas_dpcp',
+        'berkas_sk_cpns_pns',
+        'berkas_sk_pangkat_terakhir',
+        'berkas_kk',
+        'berkas_pas_foto',
+        'berkas_lainnya',
+    ];
+
+    public static $berkasFields = [
+        'berkas_dpcp' => 'Data Perorangan Calon Penerima Pensiun (DCPC)',
+        'berkas_sk_cpns_pns' => 'SK CPNS dan PNS',
+        'berkas_sk_pangkat_terakhir' => 'SK Pangkat Terakhir',
+        'berkas_kk' => 'Kartu Keluarga (KK)',
+        'berkas_pas_foto' => 'Pas Foto Terbaru',
+        'berkas_lainnya' => 'Berkas Pendukung Lainnya',
     ];
 
     /**
@@ -26,5 +42,13 @@ class Pensiun extends Model
     public function pegawai()
     {
         return $this->belongsTo(Pegawai::class);
+    }
+
+    /**
+     * Membuat hash unik untuk URL.
+     */
+    public function getRouteHash(): string
+    {
+        return hash_hmac('sha256', "pensiun-id:{$this->id}", config('app.key'));
     }
 }

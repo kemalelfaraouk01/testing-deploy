@@ -63,7 +63,7 @@ class VerifikasiTppController extends Controller
         ]);
 
         // Cari user pengelola dari OPD yang bersangkutan untuk dikirim notifikasi
-        $pengelolaOpd = User::role('Pengelola')->whereHas('pegawai', function ($query) use ($pengajuanTpp) {
+        $pengelolaOpd = User::role('Operator TPP')->whereHas('pegawai', function ($query) use ($pengajuanTpp) {
             $query->where('opd_id', $pengajuanTpp->opd_id);
         })->first();
 
@@ -89,8 +89,16 @@ class VerifikasiTppController extends Controller
         return redirect()->back()->with('success', 'Besaran TPP berhasil disimpan.');
     }
 
-    public function show(PengajuanTpp $pengajuanTpp)
+    public function show(Request $request, PengajuanTpp $pengajuanTpp)
     {
+        // Validasi hash untuk keamanan URL
+        if (!hash_equals($pengajuanTpp->getRouteHash(), $request->hash)) {
+            abort(403, 'URL TIDAK VALID ATAU TELAH KADALUARSA.');
+        }
+
+        // Eager load the OPD relationship to ensure it's available
+        $pengajuanTpp->load('opd');
+
         // Ambil daftar bulan untuk ditampilkan di view
         $daftarBulan = [
             1 => 'Januari',

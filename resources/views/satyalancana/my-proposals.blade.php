@@ -90,40 +90,50 @@
 
                                 {{-- Action Button --}}
                                 <div class="pt-2 border-t">
-                                    {{-- ▼▼▼ UBAH LOGIKA TOMBOL AKSI ▼▼▼ --}}
-                                    @if (in_array($usulan->status, ['menunggu_kelengkapan_berkas', 'perlu_perbaikan']))
-                                        <a href="{{ route('satyalancana.berkas.show', $usulan->id) }}"
-                                            class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition duration-150">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                                                </path>
-                                            </svg>
-                                            @if ($usulan->status == 'perlu_perbaikan')
-                                                Perbaiki Berkas
-                                            @else
-                                                Lengkapi Berkas
-                                            @endif
-                                        </a>
-                                    @elseif($usulan->status == 'ditolak')
-                                        <button x-data
-                                            @click="$dispatch('open-modal', { content: '{{ $usulan->keterangan }}' })"
-                                            class="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition duration-150">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                                </path>
-                                            </svg>
-                                            Lihat Alasan Penolakan
-                                        </button>
-                                    @else
+                                    <div class="flex items-center space-x-2 mt-2">
+                                        @if (in_array($usulan->status, ['menunggu_kelengkapan_berkas', 'perlu_perbaikan']))
+                                            <a href="{{ route('satyalancana.berkas.show', $usulan->id) }}"
+                                                class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition duration-150">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                                    </path>
+                                                </svg>
+                                                @if ($usulan->status == 'perlu_perbaikan')
+                                                    Perbaiki
+                                                @else
+                                                    Lengkapi
+                                                @endif
+                                            </a>
+                                        @elseif($usulan->status == 'ditolak')
+                                            <button x-data
+                                                @click="$dispatch('open-modal', { content: '{{ $usulan->keterangan }}' })"
+                                                class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition duration-150">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                    </path>
+                                                </svg>
+                                                Alasan Ditolak
+                                            </button>
+                                        @endif
+
+                                        @if ($usulan->status != 'menunggu_kelengkapan_berkas')
+                                            <button x-data
+                                                @click="$dispatch('open-berkas-modal', { usulan: {{ json_encode($usulan) }} })"
+                                                class="flex-1 inline-flex items-center justify-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 transition duration-150">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                                Lihat Berkas
+                                            </button>
+                                        @endif
+                                    </div>
+                                    @if (!in_array($usulan->status, ['menunggu_kelengkapan_berkas', 'perlu_perbaikan', 'ditolak']) && $usulan->status != 'menunggu_kelengkapan_berkas')
                                         <div class="text-center text-sm text-gray-500 py-2">
                                             Tidak ada aksi yang tersedia
                                         </div>
                                     @endif
-                                    {{-- ▲▲▲ BATAS AKHIR PERUBAHAN ▲▲▲ --}}
                                 </div>
                             </div>
                         </div>
@@ -221,99 +231,175 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="text-center py-4 px-4">
-                                        {{-- ▼▼▼ UBAH LOGIKA TOMBOL AKSI ▼▼▼ --}}
-                                        @if (in_array($usulan->status, ['menunggu_kelengkapan_berkas', 'perlu_perbaikan']))
-                                            <a href="{{ route('satyalancana.berkas.show', $usulan->id) }}"
-                                                class="inline-flex items-center px-3 py-1.5 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition duration-150">
-                                                @if ($usulan->status == 'perlu_perbaikan')
-                                                    Perbaiki Berkas
-                                                @else
-                                                    Lengkapi Berkas
-                                                @endif
-                                            </a>
-                                        @elseif($usulan->status == 'ditolak')
-                                            <button x-data
-                                                @click="$dispatch('open-modal', { content: '{{ $usulan->keterangan }}' })"
-                                                class="inline-flex items-center px-3 py-1.5 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition duration-150">
-                                                Lihat Alasan
-                                            </button>
-                                        @else
-                                            <span class="text-gray-400 text-sm">-</span>
-                                        @endif
-                                        {{-- ▲▲▲ BATAS AKHIR PERUBAHAN ▲▲▲ --}}
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center py-12">
-                                        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                            </path>
-                                        </svg>
-                                        <p class="text-gray-500">
-                                            Anda belum pernah diusulkan untuk penghargaan Satyalancana.
-                                        </p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                {{-- Pagination --}}
-                @if ($usulans->hasPages())
-                    <div class="mt-6">
-                        {{ $usulans->links() }}
-                    </div>
-                @endif
-            </div>
-        </div>
-    </div>
-
-    {{-- Modal untuk menampilkan alasan penolakan --}}
-    <div x-data="{ open: false, content: '' }" @open-modal.window="open = true; content = event.detail.content" x-show="open"
-        style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-
-        {{-- Backdrop --}}
-        <div @click="open = false" class="fixed inset-0 bg-black/50 transition-opacity"></div>
-
-        {{-- Modal Content --}}
-        <div class="relative w-full max-w-lg bg-white rounded-lg shadow-xl">
-            {{-- Header --}}
-            <div class="flex items-center justify-between p-6 border-b">
-                <h3 class="text-lg font-semibold text-gray-900">Alasan Penolakan</h3>
-                <button @click="open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            {{-- Body --}}
-            <div class="p-6">
-                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <div class="flex">
-                        <svg class="w-5 h-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor"
-                            viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <p class="text-sm text-red-800 whitespace-pre-wrap" x-text="content"></p>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Footer --}}
-            <div class="flex justify-end p-6 border-t bg-gray-50 rounded-b-lg">
-                <x-secondary-button @click="open = false" class="px-6">
-                    Tutup
-                </x-secondary-button>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
+                                                                         <td class="text-center py-4 px-4">
+                                                                            <div class="flex items-center justify-center space-x-2">
+                                                                                @if (in_array($usulan->status, ['menunggu_kelengkapan_berkas', 'perlu_perbaikan']))
+                                                                                    <a href="{{ route('satyalancana.berkas.show', $usulan->id) }}"
+                                                                                        class="inline-flex items-center px-3 py-1.5 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition duration-150">
+                                                                                        @if ($usulan->status == 'perlu_perbaikan')
+                                                                                            Perbaiki Berkas
+                                                                                        @else
+                                                                                            Lengkapi Berkas
+                                                                                        @endif
+                                                                                    </a>
+                                                                                @elseif($usulan->status == 'ditolak')
+                                                                                    <button x-data
+                                                                                        @click="$dispatch('open-modal', { content: '{{ $usulan->keterangan }}' })"
+                                                                                        class="inline-flex items-center px-3 py-1.5 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 transition duration-150">
+                                                                                        Lihat Alasan
+                                                                                    </button>
+                                                                                @endif
+                                    
+                                                                                @if ($usulan->status != 'menunggu_kelengkapan_berkas')
+                                                                                    <button x-data
+                                                                                        @click="$dispatch('open-berkas-modal', { usulan: {{ json_encode($usulan) }} })"
+                                                                                        class="inline-flex items-center px-3 py-1.5 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 transition duration-150">
+                                                                                        Lihat Berkas
+                                                                                    </button>
+                                                                                @endif
+                                    
+                                                                                @if (!in_array($usulan->status, ['menunggu_kelengkapan_berkas', 'perlu_perbaikan', 'ditolak']))
+                                                                                    <span class="text-gray-400 text-sm">-</span>
+                                                                                @endif
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td colspan="4" class="text-center py-12">
+                                                                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none"
+                                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                                                </path>
+                                                                            </svg>
+                                                                            <p class="text-gray-500">
+                                                                                Anda belum pernah diusulkan untuk penghargaan Satyalancana.
+                                                                            </p>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforelse
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                    
+                                                    {{-- Pagination --}}
+                                                    @if ($usulans->hasPages())
+                                                        <div class="mt-6">
+                                                            {{ $usulans->links() }}
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        {{-- Modal untuk menampilkan alasan penolakan --}}
+                                        <div x-data="{ open: false, content: '' }" @open-modal.window="open = true; content = event.detail.content" x-show="open"
+                                            style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                                    
+                                            {{-- Backdrop --}}
+                                            <div @click="open = false" class="fixed inset-0 bg-black/50 transition-opacity"></div>
+                                    
+                                            {{-- Modal Content --}}
+                                            <div class="relative w-full max-w-lg bg-white rounded-lg shadow-xl">
+                                                {{-- Header --}}
+                                                <div class="flex items-center justify-between p-6 border-b">
+                                                    <h3 class="text-lg font-semibold text-gray-900">Alasan Penolakan</h3>
+                                                    <button @click="open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
+                                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M6 18L18 6M6 6l12 12"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                    
+                                                {{-- Body --}}
+                                                <div class="p-6">
+                                                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                                        <div class="flex">
+                                                            <svg class="w-5 h-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor"
+                                                                viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                                    clip-rule="evenodd" />
+                                                            </svg>
+                                                            <p class="text-sm text-red-800 whitespace-pre-wrap" x-text="content"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                    
+                                                {{-- Footer --}}
+                                                <div class="flex justify-end p-6 border-t bg-gray-50 rounded-b-lg">
+                                                    <x-secondary-button @click="open = false" class="px-6">
+                                                        Tutup
+                                                    </x-secondary-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        {{-- Modal untuk menampilkan berkas --}}
+                                        <div x-data="{
+                                            open: false,
+                                            usulan: null,
+                                            berkasFields: [
+                                                { name: 'file_drh', label: 'Daftar Riwayat Hidup (DRH)' },
+                                                { name: 'file_sk_cpns', label: 'SK CPNS (Legalisir)' },
+                                                { name: 'file_sk_pangkat_terakhir', label: 'SK Pangkat Terakhir (Legalisir)' },
+                                                { name: 'file_sk_jabatan_terakhir', label: 'SK Jabatan Terakhir (Legalisir)' },
+                                                { name: 'file_surat_pernyataan_disiplin', label: 'Surat Pernyataan Hukuman Disiplin' },
+                                                { name: 'file_skp', label: 'SKP / Penilaian Kinerja' },
+                                                { name: 'file_sptjm', label: 'SPTJM (Opsional)' },
+                                                { name: 'file_piagam_sebelumnya', label: 'Piagam SLKS Sebelumnya (Opsional)' }
+                                            ]
+                                        }" @open-berkas-modal.window="open = true; usulan = event.detail.usulan" x-show="open"
+                                            style="display:none;" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                                    
+                                            {{-- Backdrop --}}
+                                            <div @click="open = false" class="fixed inset-0 bg-black/50 transition-opacity"></div>
+                                    
+                                            {{-- Modal Content --}}
+                                            <div class="relative w-full max-w-2xl bg-white rounded-lg shadow-xl">
+                                                {{-- Header --}}
+                                                <div class="flex items-center justify-between p-6 border-b">
+                                                    <div>
+                                                        <h3 class="text-lg font-semibold text-gray-900">Detail Berkas Terkirim</h3>
+                                                        <p class="text-sm text-gray-500 mt-1" x-text="usulan ? `Untuk usulan Satyalancana ${usulan.masa_kerja} Tahun` : ''"></p>
+                                                    </div>
+                                                    <button @click="open = false" class="text-gray-400 hover:text-gray-600 transition-colors">
+                                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M6 18L18 6M6 6l12 12"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                    
+                                                {{-- Body --}}
+                                                <div class="p-6 max-h-[60vh] overflow-y-auto">
+                                                    <ul class="space-y-3">
+                                                        <template x-for="field in berkasFields" :key="field.name">
+                                                            <li class="flex items-center justify-between p-3 bg-gray-50 rounded-md border">
+                                                                <span class="text-sm font-medium text-gray-800" x-text="field.label"></span>
+                                                                <template x-if="usulan && usulan[field.name]">
+                                                                    <a :href="`/storage/${usulan[field.name]}`" target="_blank"
+                                                                        class="inline-flex items-center space-x-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+                                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                                                        <span>Lihat File</span>
+                                                                    </a>
+                                                                </template>
+                                                                <template x-if="!usulan || !usulan[field.name]">
+                                                                    <span class="text-sm text-gray-400">Tidak diunggah</span>
+                                                                </template>
+                                                            </li>
+                                                        </template>
+                                                    </ul>
+                                                </div>
+                                    
+                                                {{-- Footer --}}
+                                                <div class="flex justify-end p-6 border-t bg-gray-50 rounded-b-lg">
+                                                    <x-secondary-button @click="open = false" class="px-6">
+                                                        Tutup
+                                                    </x-secondary-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </x-app-layout>

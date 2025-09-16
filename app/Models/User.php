@@ -63,4 +63,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Opd::class);
     }
+
+    public function limitNotifications()
+    {
+        $limit = 5;
+        $count = $this->notifications()->count();
+
+        if ($count > $limit) {
+            $this->notifications()->oldest()->take($count - $limit)->delete();
+        }
+    }
 }

@@ -17,39 +17,32 @@ class VerifikasiCutiController extends Controller
     public function index(): View
     {
         $user = Auth::user();
-        $query = Cuti::query(); // Mulai dengan query dasar
+        // Mulai query dengan eager loading untuk mengatasi N+1 problem.
+        $query = Cuti::with('pegawai.opd');
 
-        // Dapatkan OPD ID dari atasan yang sedang login (jika ada)
         $atasanOpdId = optional($user->pegawai)->opd_id;
 
-        // Logika ini memastikan verifikator hanya melihat data dari OPD-nya
-        if ($atasanOpdId) {
-            if ($user->hasRole('Verif Cuti Kabid')) {
-                // Kabid hanya melihat ajuan 'diajukan' dari OPD-nya
-                $query->where('status', 'diajukan')
-                    ->whereHas('pegawai', fn($q) => $q->where('opd_id', $atasanOpdId));
-            } elseif ($user->hasRole('Verif Cuti KaOPD')) {
-                // KaOPD hanya melihat ajuan 'disetujui_kabid' dari OPD-nya
-                $query->where('status', 'disetujui_kabid')
-                    ->whereHas('pegawai', fn($q) => $q->where('opd_id', $atasanOpdId));
-            } elseif ($user->hasRole('Admin')) {
-                // Admin bisa melihat semua yang masih dalam proses
-                $query->whereIn('status', ['diajukan', 'disetujui_kabid']);
-            } else {
-                // Jika tidak memiliki peran verifikasi, jangan tampilkan apa-apa
-                $query->whereRaw('0 = 1');
-            }
-        } else {
-            // Jika atasan tidak terikat OPD (kecuali Admin), jangan tampilkan apa-apa
-            if (!$user->hasRole('Admin')) {
-                $query->whereRaw('0 = 1');
-            } else {
-                // Admin tetap bisa melihat semua yang pending jika tidak terikat OPD
-                $query->whereIn('status', ['diajukan', 'disetujui_kabid']);
-            }
+        // Admin melihat semua permintaan yang tertunda dari semua OPD.
+        if ($user->hasRole('Admin')) {
+            $query->whereIn('status', ['diajukan', 'disetujui_kabid']);
+        }
+        // Kabid melihat status 'diajukan' dari OPD-nya sendiri.
+        elseif ($user->hasRole('Verif Cuti Kabid') && $atasanOpdId) {
+            $query->where('status', 'diajukan')
+                ->whereHas('pegawai', fn($q) => $q->where('opd_id', $atasanOpdId));
+        }
+        // KaOPD melihat status 'disetujui_kabid' dari OPD-nya sendiri.
+        elseif ($user->hasRole('Verif Cuti KaOPD') && $atasanOpdId) {
+            $query->where('status', 'disetujui_kabid')
+                ->whereHas('pegawai', fn($q) => $q->where('opd_id', $atasanOpdId));
+        }
+        // Peran lain tidak melihat apa-apa.
+        else {
+            $query->whereRaw('0 = 1'); // Secara efektif mengembalikan koleksi kosong.
         }
 
-        $cutis = $query->with('pegawai.opd')->latest()->paginate(10);
+        // Langsung panggil paginate di akhir query.
+        $cutis = $query->latest()->paginate(10);
 
         return view('verifikasi-cuti.index', compact('cutis'));
     }

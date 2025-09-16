@@ -32,6 +32,12 @@ class PengajuanTpp extends Model
         return $this->belongsTo(Opd::class);
     }
 
+    // Relasi ke User (pembuat pengajuan)
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     // Relasi ke Pegawai (Many to Many)
     public function pegawais(): BelongsToMany
     {
@@ -44,5 +50,22 @@ class PengajuanTpp extends Model
     {
         // Membuat hash dari ID pengajuan dengan kunci rahasia aplikasi
         return hash_hmac('sha256', "pengajuan-tpp-id:{$this->id}", config('app.key'));
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (PengajuanTpp $pengajuanTpp) {
+            // 0. Set user_id dari pengguna yang login
+            if (auth()->check()) {
+                $pengajuanTpp->user_id = auth()->id();
+            }
+
+            // Generate a unique random 5-digit number.
+            do {
+                $randomNumber = random_int(10000, 99999);
+            } while (self::where('nomor_pengajuan', $randomNumber)->exists());
+
+            $pengajuanTpp->nomor_pengajuan = $randomNumber;
+        });
     }
 }

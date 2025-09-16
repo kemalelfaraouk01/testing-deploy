@@ -163,71 +163,87 @@
 
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-6">
-                        <div class="px-6 py-4 bg-gradient-to-r from-purple-50 to-pink-50 border-b border-gray-200">
+                        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
                             <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor"
+                                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Tindakan Verifikasi
+                                Status & Tindakan
                             </h3>
                         </div>
-                        <div class="p-6">
-                            {{-- ▼▼▼ LOGIKA TAMPILAN BARU DIMULAI DI SINI ▼▼▼ --}}
+                        <div class="p-6 space-y-6">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Status Saat Ini</p>
+                                @php
+                                    $status = $satyalancana->status;
+                                    $statusText = Str::title(str_replace('_', ' ', $status));
+                                    $statusColorClasses = match ($status) {
+                                        'disetujui' => 'bg-green-100 text-green-800',
+                                        'perlu_perbaikan' => 'bg-yellow-100 text-yellow-800',
+                                        'ditolak' => 'bg-red-100 text-red-800',
+                                        default => 'bg-blue-100 text-blue-800',
+                                    };
+                                @endphp
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold {{ $statusColorClasses }}">
+                                    {{ $statusText }}
+                                </span>
+                            </div>
+
                             @if (in_array($satyalancana->status, ['diusulkan', 'berkas_lengkap', 'menunggu_kelengkapan_berkas']))
-                                <p class="text-sm text-gray-600 mb-6">Pilih tindakan yang akan dilakukan terhadap usulan
-                                    ini:</p>
-                                <div class="space-y-3">
-                                    <button
-                                        @click="openModal('approve', 'Konfirmasi Persetujuan', '{{ route('verifikasi-satyalancana.approve', $satyalancana->id) }}')"
-                                        class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 border border-transparent rounded-lg font-semibold text-sm text-white transition-all duration-200 transform hover:scale-105 active:scale-95">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        Setujui Usulan
-                                    </button>
-                                    <button
-                                        @click="openModal('reject', 'Konfirmasi Penolakan', '{{ route('verifikasi-satyalancana.reject', $satyalancana->id) }}')"
-                                        class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 border border-transparent rounded-lg font-semibold text-sm text-white transition-all duration-200 transform hover:scale-105 active:scale-95">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Tolak (Kembalikan untuk Perbaikan)
-                                    </button>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 mb-2">Pilih Tindakan</p>
+                                    <div class="space-y-3">
+                                        <button
+                                            @click="openModal('approve', 'Konfirmasi Persetujuan', '{{ route('verifikasi-satyalancana.approve', $satyalancana->id) }}')"
+                                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 border border-transparent rounded-lg font-semibold text-sm text-white transition-all duration-200 transform hover:scale-105 active:scale-95">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Setujui Usulan
+                                        </button>
+                                        <button
+                                            @click="openModal('reject', 'Konfirmasi Penolakan', '{{ route('verifikasi-satyalancana.reject', $satyalancana->id) }}')"
+                                            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-red-50 border border-red-300 rounded-lg font-semibold text-sm text-red-600 transition-all duration-200 transform hover:scale-105 active:scale-95">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                            </svg>
+                                            Kembalikan untuk Perbaikan
+                                        </button>
+                                    </div>
                                 </div>
                             @else
-                                <div class="text-center p-4 bg-gray-50 rounded-lg">
-                                    <h4 class="font-semibold text-gray-800">Usulan Telah Diproses</h4>
-                                    <p class="text-sm text-gray-600 mt-2">
-                                        Status usulan ini adalah:
-                                        <span
-                                            class="font-bold 
-                                            @if ($satyalancana->status == 'disetujui') text-green-600 
-                                            @elseif($satyalancana->status == 'ditolak') text-red-600
-                                            @elseif($satyalancana->status == 'perlu_perbaikan') text-orange-600 @endif">
-                                            {{ Str::title(str_replace('_', ' ', $satyalancana->status)) }}
-                                        </span>
-                                    </p>
+                                <div class="text-sm text-gray-600 space-y-4">
                                     @if ($satyalancana->diverifikasiOleh)
-                                        <p class="text-xs text-gray-500 mt-2">
-                                            Diproses oleh: {{ $satyalancana->diverifikasiOleh->name }} <br>
-                                            Pada:
-                                            {{ \Carbon\Carbon::parse($satyalancana->tanggal_verifikasi)->translatedFormat('d F Y H:i') }}
-                                        </p>
+                                        <div>
+                                            <p class="font-medium text-gray-500 mb-1">Diproses oleh</p>
+                                            <p class="font-semibold text-gray-800">
+                                                {{ $satyalancana->diverifikasiOleh->name }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium text-gray-500 mb-1">Tanggal Proses</p>
+                                            <p class="font-semibold text-gray-800">
+                                                {{ \Carbon\Carbon::parse($satyalancana->tanggal_verifikasi)->translatedFormat('d F Y, H:i') }}
+                                            </p>
+                                        </div>
                                     @endif
                                     @if ($satyalancana->status == 'perlu_perbaikan' && $satyalancana->keterangan)
-                                        <div class="mt-3 text-left text-xs bg-orange-100 p-2 rounded">
-                                            <strong>Alasan:</strong> {{ $satyalancana->keterangan }}
+                                        <div>
+                                            <p class="font-medium text-gray-500 mb-1">Alasan Perbaikan</p>
+                                            <div
+                                                class="text-sm bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded-lg">
+                                                {{ $satyalancana->keterangan }}
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
                             @endif
-                            {{-- ▲▲▲ BATAS AKHIR LOGIKA TAMPILAN BARU ▲▲▲ --}}
                         </div>
                     </div>
                 </div>

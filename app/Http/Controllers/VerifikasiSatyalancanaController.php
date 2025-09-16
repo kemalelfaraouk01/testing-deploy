@@ -69,6 +69,7 @@ class VerifikasiSatyalancanaController extends Controller
 
         if ($satyalancana->pegawai && $satyalancana->pegawai->user) {
             Notification::send($satyalancana->pegawai->user, new SatyalancanaPerluPerbaikanNotification($satyalancana));
+            $satyalancana->pegawai->user->limitNotifications();
         }
 
         // Redirect kembali ke halaman detail, bukan ke index

@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             {{-- Form Pengajuan Baru --}}
-            @role('Admin|Pengelola')
+            @role('Admin|Operator TPP')
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200">
                     <div class="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-xl">
                         <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -163,7 +163,7 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        @foreach (['Periode', 'OPD', 'Status', 'Tgl Dibuat', 'Aksi'] as $header)
+                                        @foreach (['No. Pengajuan', 'Periode', 'OPD', 'Status', 'Tgl Dibuat', 'Aksi'] as $header)
                                             <th
                                                 class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                                 {{ $header }}
@@ -175,6 +175,11 @@
                                     @foreach ($pengajuanTpps as $pengajuan)
                                         <tr class="hover:bg-gray-50 transition-colors">
                                             <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-semibold text-gray-800">
+                                                    #{{ $pengajuan->nomor_pengajuan ?? 'N/A' }}
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="text-sm font-medium text-gray-900">
                                                     {{ $daftarBulan[$pengajuan->periode_bulan] }}
                                                     {{ $pengajuan->periode_tahun }}
@@ -185,6 +190,7 @@
                                                     title="{{ $pengajuan->opd->nama_opd }}">
                                                     {{ $pengajuan->opd->nama_opd }}
                                                 </div>
+                                                <div class="text-xs text-gray-500">Oleh: {{ $pengajuan->user?->name ?? 'Sistem' }}</div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <x-status-badge :status="$pengajuan->status" />
@@ -193,7 +199,11 @@
                                                 {{ $pengajuan->created_at->format('d M Y') }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-center">
-                                                <x-action-button :pengajuan="$pengajuan" />
+                                                @if ($pengajuan->status == 'draft')
+                                                    <a href="{{ route('pengajuan-tpp.lengkapi-berkas', $pengajuan->id) }}" class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">Lengkapi Berkas</a>
+                                                @else
+                                                    <x-action-button :pengajuan="$pengajuan" />
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -209,12 +219,17 @@
                                     <div class="p-4">
                                         <div class="flex justify-between items-start mb-3">
                                             <div class="flex-1">
+                                                <p class="text-xs font-semibold text-gray-500 mb-1">
+                                                    #{{ $pengajuan->nomor_pengajuan ?? 'N/A' }}
+                                                </p>
                                                 <h4 class="font-medium text-gray-900 text-sm">
                                                     {{ $daftarBulan[$pengajuan->periode_bulan] }}
                                                     {{ $pengajuan->periode_tahun }}
                                                 </h4>
                                                 <p class="text-xs text-gray-600 mt-1 truncate">
-                                                    {{ $pengajuan->opd->nama_opd }}</p>
+                                                    {{ $pengajuan->opd->nama_opd }}
+                                                </p>
+                                                <p class="text-xs text-gray-500">Oleh: {{ $pengajuan->user?->name ?? 'Sistem' }}</p>
                                                 <p class="text-xs text-gray-500 mt-2">
                                                     {{ $pengajuan->created_at->format('d M Y') }}</p>
                                             </div>
@@ -222,7 +237,11 @@
                                         </div>
 
                                         <div class="pt-3 border-t border-gray-200">
-                                            <x-action-button :pengajuan="$pengajuan" :mobile="true" />
+                                            @if ($pengajuan->status == 'draft')
+                                                <a href="{{ route('pengajuan-tpp.lengkapi-berkas', $pengajuan->id) }}" class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">Lengkapi Berkas</a>
+                                            @else
+                                                <x-action-button :pengajuan="$pengajuan" :mobile="true" />
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

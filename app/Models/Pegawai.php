@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
 class Pegawai extends Model
 {
     use HasFactory;
+
+    public static $all_statuses = ['PNS', 'CPNS', 'PPPK', 'Honorer', 'Pensiun'];
+    public static $selectable_statuses = ['PNS', 'CPNS', 'PPPK', 'Honorer'];
 
     /**
      * The attributes that are mass assignable.
@@ -104,5 +108,10 @@ class Pegawai extends Model
     public function bidang()
     {
         return $this->belongsTo(Bidang::class);
+    }
+
+    public function pensiun(): HasOne
+    {
+        return $this->hasOne(Pensiun::class);
     }
 }

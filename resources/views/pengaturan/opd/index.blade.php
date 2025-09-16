@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight truncate">
                     {{ __('Pengelolaan Data OPD') }}
                 </h2>
             </div>

@@ -59,6 +59,13 @@
                         <div class="p-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
+                                    <div class="text-sm text-gray-500 mb-1">No. Pengajuan</div>
+                                    <div class="text-base font-semibold text-gray-800">
+                                        #{{ $pengajuanTpp->nomor_pengajuan ?? 'N/A' }}
+                                    </div>
+                                </div>
+
+                                <div>
                                     <div class="text-sm text-gray-500 mb-1">Periode</div>
                                     <div class="text-base font-medium text-gray-900">
                                         {{ $daftarBulan[$pengajuanTpp->periode_bulan] }}
@@ -91,7 +98,7 @@
                                 <div class="md:col-span-2">
                                     <div class="text-sm text-gray-500 mb-1">Unit Kerja</div>
                                     <div class="text-base font-medium text-gray-900">
-                                        {{ $pengajuanTpp->opd->nama_opd }}
+                                        {{ $pengajuanTpp->opd?->nama_opd ?? '[OPD tidak ditemukan]' }}
                                     </div>
                                 </div>
 
@@ -99,6 +106,13 @@
                                     <div class="text-sm text-gray-500 mb-1">Tanggal Diajukan</div>
                                     <div class="text-sm text-gray-900">
                                         {{ $pengajuanTpp->created_at->translatedFormat('d F Y, H:i') }} WIB
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="text-sm text-gray-500 mb-1">Diajukan Oleh</div>
+                                    <div class="text-sm text-gray-900">
+                                        {{ $pengajuanTpp->user?->name ?? 'Sistem' }}
                                     </div>
                                 </div>
                             </div>

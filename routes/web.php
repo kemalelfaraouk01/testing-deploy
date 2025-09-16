@@ -17,6 +17,8 @@ use App\Http\Controllers\RiwayatJabatanController;
 use App\Http\Controllers\BerkasSatyalancanaController;
 use App\Http\Controllers\VerifikasiSatyalancanaController;
 use App\Http\Controllers\PensiunController;
+use App\Http\Controllers\BerkasPensiunController; // <-- Import baru
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OpdController;       // <-- Tambahkan ini di bagian atas
 use App\Http\Controllers\JabatanController;
 
@@ -49,9 +51,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // --- RUTE NOTIFIKASI ---
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+    Route::delete('/notifications/clear-all', [NotificationController::class, 'clearAll'])->name('notifications.clearAll');
+
     Route::get('/cuti', [CutiController::class, 'index'])->name('cuti.index');
     Route::get('/cuti/create', [CutiController::class, 'create'])->name('cuti.create');
     Route::post('/cuti', [CutiController::class, 'store'])->name('cuti.store');
+
+    // Rute untuk kandidat melengkapi berkas pensiun
+    Route::get('/berkas-pensiun/{pensiun}/lengkapi', [BerkasPensiunController::class, 'create'])->name('berkas-pensiun.create');
+    Route::post('/berkas-pensiun/{pensiun}/lengkapi', [BerkasPensiunController::class, 'store'])->name('berkas-pensiun.store');
 
     Route::get('berkas-satyalancana/{satyalancana}', [BerkasSatyalancanaController::class, 'create'])
         ->name('berkas-satyalancana.create')
@@ -69,8 +80,9 @@ Route::middleware('auth')->group(function () {
 
 
     // --- RUTE PEGAWAI (Hak Akses Terpisah) ---
-    Route::middleware(['role:Admin|Pengelola|Kepala Bidang|Kepala OPD'])->group(function () {
+    Route::middleware(['role:Admin|Operator TPP|Kepala Bidang|Kepala OPD'])->group(function () {
         Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+        Route::get('/pegawai-pensiun', [PegawaiController::class, 'indexPensiun'])->name('pegawai.pensiun');
         Route::get('/pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
     });
 
@@ -90,9 +102,10 @@ Route::middleware('auth')->group(function () {
     });
 
     // --- RUTE TPP (Hak Akses Terpisah) ---
-    Route::middleware(['role:Admin|Pengelola'])->group(function () {
+    Route::middleware(['role:Admin|Operator TPP'])->group(function () {
         Route::get('/pengajuan-tpp/lanjutkan', [PengajuanTppController::class, 'lanjutkanKeForm'])->name('pengajuan-tpp.lanjutkan');
-        Route::get('/pengajuan-tpp/buat', [PengajuanTppController::class, 'create'])->name('pengajuan-tpp.create');
+        Route::get('/pengajuan-tpp/{pengajuanTpp}/lengkapi-berkas', [PengajuanTppController::class, 'lengkapiBerkasForm'])->name('pengajuan-tpp.lengkapi-berkas');
+        Route::put('/pengajuan-tpp/{pengajuanTpp}/submit-berkas', [PengajuanTppController::class, 'submitBerkas'])->name('pengajuan-tpp.submit-berkas');
         Route::post('/pengajuan-tpp', [PengajuanTppController::class, 'store'])->name('pengajuan-tpp.store');
         Route::get('/pegawai/{pegawai}/riwayat-pangkat/create', [RiwayatPangkatController::class, 'create'])->name('pegawai.riwayat.create');
 
@@ -111,11 +124,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/pegawai/{pegawai}/riwayat-pangkat', [RiwayatPangkatController::class, 'store'])->name('pegawai.riwayat.store');
         Route::delete('/riwayat-pangkat/{riwayatPangkat}', [RiwayatPangkatController::class, 'destroy'])->name('riwayat-pangkat.destroy');
 
-        Route::resource('pensiun', PensiunController::class);
+        // Route::resource('pensiun', PensiunController::class); // Moved to its own middleware group
         Route::get('/pengajuan-tpp/{pengajuanTpp}/edit', [PengajuanTppController::class, 'edit'])->name('pengajuan-tpp.edit');
         Route::put('/pengajuan-tpp/{pengajuanTpp}', [PengajuanTppController::class, 'update'])->name('pengajuan-tpp.update');
     });
-    Route::middleware(['role:Admin|Pengelola|Verifikasi TPP'])->group(function () {
+    Route::middleware(['role:Admin|Operator TPP|Verifikasi TPP'])->group(function () {
         Route::get('/pengajuan-tpp', [PengajuanTppController::class, 'index'])->name('pengajuan-tpp.index');
         Route::get('/pengajuan-tpp/{pengajuanTpp}', [PengajuanTppController::class, 'show'])->name('pengajuan-tpp.show');
         // RUTE BARU UNTUK CETAK PDF
@@ -129,6 +142,14 @@ Route::middleware('auth')->group(function () {
         Route::get('verifikasi-satyalancana/{satyalancana}', [VerifikasiSatyalancanaController::class, 'show'])->name('verifikasi-satyalancana.show');
         Route::post('verifikasi-satyalancana/{satyalancana}/approve', [VerifikasiSatyalancanaController::class, 'approve'])->name('verifikasi-satyalancana.approve');
         Route::post('verifikasi-satyalancana/{satyalancana}/reject', [VerifikasiSatyalancanaController::class, 'reject'])->name('verifikasi-satyalancana.reject');
+    });
+
+    // --- RUTE PENSIUN ---
+    Route::middleware(['role:Admin|Pengelola Pensiun'])->group(function () {
+        Route::get('pensiun/cek-status', [PensiunController::class, 'cekStatus'])->name('pensiun.cek-status');
+        Route::resource('pensiun', PensiunController::class);
+        Route::patch('pensiun/{pensiun}/approve', [PensiunController::class, 'approve'])->name('pensiun.approve');
+        Route::post('pensiun/{pensiun}/request-correction', [PensiunController::class, 'requestCorrection'])->name('pensiun.request-correction');
     });
 
 

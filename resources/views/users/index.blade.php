@@ -22,6 +22,19 @@
                         </a>
                     </div>
 
+                    {{-- Form Pencarian --}}
+                    <form action="{{ route('users.index') }}" method="GET" class="mb-4">
+                        <div class="flex items-center">
+                            <input type="text" name="search" placeholder="Cari nama atau NIP..."
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full sm:w-1/3"
+                                value="{{ request('search') }}">
+                            <button type="submit"
+                                class="ml-2 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
+                                Cari
+                            </button>
+                        </div>
+                    </form>
+
                     @if (session('error'))
                         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
                             role="alert">
@@ -38,7 +51,10 @@
                                         class="sticky left-0 bg-gray-50 z-10 px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-r border-gray-200 min-w-[60px]">
                                         No
                                     </th>
-
+                                    <th
+                                        class="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-r border-gray-200">
+                                        ID
+                                    </th>
                                     <th
                                         class="sticky left-[60px] bg-gray-50 z-10 px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-r border-gray-200 min-w-[200px]">
                                         Nama
@@ -65,7 +81,9 @@
                                             class="sticky left-0 bg-white hover:bg-gray-50 z-10 px-3 py-4 text-sm text-gray-900 border-r border-gray-200">
                                             {{ $users->firstItem() + $index }}
                                         </td>
-
+                                        <td class="px-3 py-4 text-sm text-gray-900 border-r border-gray-200">
+                                            {{ $user->id }}
+                                        </td>
                                         <td
                                             class="sticky left-[60px] bg-white hover:bg-gray-50 z-10 px-4 py-4 border-r border-gray-200">
                                             <div class="text-sm font-semibold text-gray-900">
@@ -101,7 +119,7 @@
                                 @empty
                                     <tr>
                                         {{-- ▼▼▼ 3. COLSPAN DISESUAIKAN MENJADI 5 ▼▼▼ --}}
-                                        <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-500">
+                                        <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-500">
                                             <p class="text-lg font-medium text-gray-900 mb-1">Tidak ada data user</p>
                                             <p class="text-sm text-gray-500">Data user belum tersedia untuk ditampilkan.
                                             </p>

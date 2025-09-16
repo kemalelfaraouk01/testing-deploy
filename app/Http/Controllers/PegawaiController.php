@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Opd;
 use App\Models\Jabatan; // <-- Penambahan import
+use Illuminate\Validation\Rule; // <-- Tambahkan ini
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PegawaiImport;
 use Maatwebsite\Excel\Validators\ValidationException;
@@ -19,28 +20,54 @@ class PegawaiController extends Controller
     /**
      * Menampilkan daftar data pegawai.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $query = Pegawai::with('user')->latest();
-        $namaOpd = 'Semua OPD'; // Default untuk Admin
+        $query = Pegawai::with('user')->where(function ($q) {
+            $q->where('status_kepegawaian', '!=', 'Pensiun')
+                ->orWhereNull('status_kepegawaian');
+        })->latest();
+        $namaOpd = 'Semua OPD'; // Default
+        $opds = collect(); // Default ke koleksi kosong
+        $selectedOpdId = $request->input('opd_id');
+        $searchNama = $request->input('search_nama');
+        $searchStatus = $request->input('status_kepegawaian'); // Ambil status dari request
 
-        // Filter data jika yang login bukan Admin
-        if (!$user->hasRole('Admin')) {
+        // Terapkan filter pencarian nama jika ada
+        if ($searchNama) {
+            $query->where('nama_lengkap', 'like', '%' . $searchNama . '%');
+        }
+
+        // Terapkan filter status jika ada
+        if ($searchStatus) {
+            $query->where('status_kepegawaian', $searchStatus);
+        }
+
+        if ($user->hasRole('Admin')) {
+            $opds = Opd::orderBy('nama_opd')->get();
+
+            if ($selectedOpdId) {
+                $query->where('opd_id', $selectedOpdId);
+                $filteredOpd = $opds->find($selectedOpdId);
+                $namaOpd = $filteredOpd ? $filteredOpd->nama_opd : 'OPD Tidak Ditemukan';
+            }
+        } else {
+            // Logika yang sudah ada untuk non-admin
             $opd_id = $user->pegawai->opd_id ?? null;
 
             if ($opd_id) {
                 $query->where('opd_id', $opd_id);
-                $namaOpd = $user->pegawai->opd->nama_opd; // Ambil nama OPD
+                $namaOpd = $user->pegawai->opd->nama_opd;
             } else {
-                $query->whereRaw('0 = 1'); // Jika tidak punya OPD, jangan tampilkan data
+                $query->whereRaw('0 = 1');
                 $namaOpd = 'Tidak Terikat OPD';
             }
         }
 
-        $pegawais = $query->paginate(10);
+        $pegawais = $query->paginate(10)->withQueryString();
+        $statuses = Pegawai::$selectable_statuses; // Ambil daftar status
 
-        return view('pegawai.index', compact('pegawais', 'namaOpd'));
+        return view('pegawai.index', compact('pegawais', 'namaOpd', 'opds', 'selectedOpdId', 'searchNama', 'statuses', 'searchStatus'));
     }
 
     public function show(Pegawai $pegawai)
@@ -57,7 +84,8 @@ class PegawaiController extends Controller
         $opds = Opd::all();
         $jabatans = Jabatan::orderBy('nama_jabatan')->get(); // <-- AMBIL DATA JABATAN
         $users = User::whereDoesntHave('pegawai')->get();
-        return view('pegawai.create', compact('opds', 'jabatans', 'users')); // <-- KIRIM KE VIEW
+        $statuses = Pegawai::$selectable_statuses; // Ambil status dari model
+        return view('pegawai.create', compact('opds', 'jabatans', 'users', 'statuses')); // <-- KIRIM KE VIEW
     }
 
 
@@ -86,7 +114,7 @@ class PegawaiController extends Controller
             'pangkat' => 'nullable|string|max:255',
             'golongan' => 'nullable|string|max:255',
             'unit_kerja' => 'nullable|string|max:255',
-            'status_kepegawaian' => 'nullable|string|max:255',
+            'status_kepegawaian' => ['nullable', Rule::in(Pegawai::$selectable_statuses)],
             'jenis_kepegawaian' => 'nullable|string|max:255',
             'tmt_cpns' => 'nullable|date',
             'tmt_pns' => 'nullable|date',
@@ -125,7 +153,9 @@ class PegawaiController extends Controller
     public function edit(Pegawai $pegawai)
     {
         $opds = Opd::all();
-        return view('pegawai.edit', compact('pegawai', 'opds')); // <-- KIRIM KE VIEW
+        $jabatans = Jabatan::orderBy('nama_jabatan')->get();
+        $statuses = Pegawai::$selectable_statuses; // Ambil status dari model
+        return view('pegawai.edit', compact('pegawai', 'opds', 'jabatans', 'statuses')); // <-- KIRIM KE VIEW
     }
 
     /**
@@ -153,7 +183,7 @@ class PegawaiController extends Controller
             'pangkat' => 'nullable|string|max:255',
             'golongan' => 'nullable|string|max:255',
             'unit_kerja' => 'nullable|string|max:255',
-            'status_kepegawaian' => 'nullable|string|max:255',
+            'status_kepegawaian' => ['nullable', Rule::in(Pegawai::$selectable_statuses)],
             'jenis_kepegawaian' => 'nullable|string|max:255',
             'tmt_cpns' => 'nullable|date',
             'tmt_pns' => 'nullable|date',
@@ -251,5 +281,22 @@ class PegawaiController extends Controller
         }
 
         return redirect()->route('pegawai.index')->with('success', 'Data pegawai sedang diimpor di background. Proses akan berjalan beberapa saat.');
+    }
+
+    /**
+     * Menampilkan daftar pegawai yang sudah pensiun.
+     */
+    public function indexPensiun(Request $request)
+    {
+        $query = Pegawai::with(['user', 'pensiun'])->where('status_kepegawaian', 'Pensiun')->latest();
+
+        $searchNama = $request->input('search_nama');
+        if ($searchNama) {
+            $query->where('nama_lengkap', 'like', '%' . $searchNama . '%');
+        }
+
+        $pegawais = $query->paginate(10)->withQueryString();
+
+        return view('pegawai.pensiun', compact('pegawais', 'searchNama'));
     }
 }

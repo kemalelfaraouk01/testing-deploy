@@ -10,7 +10,7 @@
         </div>
         <h4 class="text-lg font-semibold text-gray-900">Riwayat Jabatan</h4>
     </div>
-    @role('Admin|Pengelola')
+    @role('Admin|Operator TPP')
         <a href="{{ route('pegawai.riwayat-jabatan.create', $pegawai->id) }}"
             class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

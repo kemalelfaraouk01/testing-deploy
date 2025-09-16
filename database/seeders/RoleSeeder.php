@@ -26,12 +26,13 @@ class RoleSeeder extends Seeder
         $roleAdmin = Role::firstOrCreate(['name' => 'Admin']);
         Role::firstOrCreate(['name' => 'Kepala OPD']);
         Role::firstOrCreate(['name' => 'Kepala Bidang']);
-        Role::firstOrCreate(['name' => 'Pengelola']);
+        Role::firstOrCreate(['name' => 'Operator TPP']);
         Role::firstOrCreate(['name' => 'Verifikasi TPP']);
         Role::firstOrCreate(['name' => 'Verif Cuti Kabid']);
         Role::firstOrCreate(['name' => 'Verif Cuti KaOPD']);
         $roleUser = Role::firstOrCreate(['name' => 'User']);
         $rolePengelolaSatyalancana = Role::firstOrCreate(['name' => 'Pengelola Satyalancana']);
+        Role::firstOrCreate(['name' => 'Pengelola Pensiun']);
 
         // 5. Berikan permission 'kelola pengaturan' ke peran 'Admin'
         $roleAdmin->givePermissionTo('kelola pengaturan');

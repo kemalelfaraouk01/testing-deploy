@@ -11,9 +11,20 @@ use App\Models\Opd;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('roles')->latest()->paginate(10);
+        $query = User::query();
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('nip', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $users = $query->with('roles')->oldest()->paginate(10)->withQueryString();
+
         return view('users.index', compact('users'));
     }
 
