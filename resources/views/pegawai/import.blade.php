@@ -34,7 +34,7 @@
                         <li>Kolom <strong>nama_opd</strong> harus diisi dengan **NAMA LENGKAP OPD** yang sudah terdaftar
                             di sistem.</li>
                         <li>Pastikan tidak ada **NIP yang duplikat** di dalam file.</li>
-                        <li>Password default untuk user baru adalah: <strong>password123</strong>.</li>
+                        <li>Password default untuk user baru adalah **8 digit pertama NIP**.</li>
                     </ul>
                 </div>
 

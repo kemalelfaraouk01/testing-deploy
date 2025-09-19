@@ -29,7 +29,23 @@ class PensiunDiajukanNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database']; // Kirim notifikasi ke database
+        return ['database', 'mail']; // Kirim notifikasi ke database dan email
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): MailMessage
+    {
+        $url = route('berkas-pensiun.create', ['pensiun' => $this->pensiun->id, 'hash' => $this->pensiun->getRouteHash()]);
+
+        return (new MailMessage)
+                    ->subject('Usulan Pensiun dan Permintaan Kelengkapan Berkas')
+                    ->line('Anda telah diusulkan untuk pensiun oleh OPD Anda.')
+                    ->line('Mohon untuk segera melengkapi berkas persyaratan Anda dengan menekan tombol di bawah ini.')
+                    ->action('Lengkapi Berkas Pensiun', $url)
+                    ->line('Terima kasih.')
+                    ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }
 
     /**

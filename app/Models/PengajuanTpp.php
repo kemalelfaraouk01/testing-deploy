@@ -38,6 +38,12 @@ class PengajuanTpp extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Relasi ke Pegawai (pembuat pengajuan)
+    public function pegawai(): BelongsTo
+    {
+        return $this->belongsTo(Pegawai::class);
+    }
+
     // Relasi ke Pegawai (Many to Many)
     public function pegawais(): BelongsToMany
     {

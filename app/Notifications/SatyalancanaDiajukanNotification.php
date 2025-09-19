@@ -4,6 +4,8 @@ namespace App\Notifications;
 
 use App\Models\Satyalancana; // Import model
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class SatyalancanaDiajukanNotification extends Notification
@@ -19,7 +21,21 @@ class SatyalancanaDiajukanNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['database']; // Simpan ke database
+        return ['database', 'mail']; // Simpan ke database dan kirim email
+    }
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        $url = route('berkas-satyalancana.create', $this->satyalancana->id);
+        $masaKerja = $this->satyalancana->masa_kerja;
+
+        return (new MailMessage)
+                    ->subject("Usulan Satyalancana {$masaKerja} Tahun")
+                    ->line("Anda telah diusulkan untuk menerima penghargaan Satyalancana {$masaKerja} tahun.")
+                    ->line('Untuk melanjutkan proses, mohon lengkapi berkas persyaratan Anda dengan menekan tombol di bawah ini.')
+                    ->action('Lengkapi Berkas Satyalancana', $url)
+                    ->line('Terima kasih.')
+                    ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }
 
     public function toArray(object $notifiable): array

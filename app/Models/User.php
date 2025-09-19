@@ -27,6 +27,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'nip', // Ganti 'email' menjadi 'nip'
+        'nomor_hp',
         'opd_id',
         'password',
     ];
@@ -72,5 +73,18 @@ class User extends Authenticatable
         if ($count > $limit) {
             $this->notifications()->oldest()->take($count - $limit)->delete();
         }
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string|null
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // Mengambil email dari relasi pegawai
+        // Pastikan setiap user memiliki relasi pegawai dan data email di sana
+        return $this->pegawai->email;
     }
 }

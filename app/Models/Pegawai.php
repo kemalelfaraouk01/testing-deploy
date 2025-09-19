@@ -95,6 +95,11 @@ class Pegawai extends Model
         return $this->hasMany(RiwayatPangkat::class)->orderBy('tmt_pangkat', 'desc');
     }
 
+    public function riwayatPangkatTerakhir(): HasOne
+    {
+        return $this->hasOne(RiwayatPangkat::class)->latestOfMany('tmt_pangkat');
+    }
+
     public function satyalancanas(): HasMany
     {
         return $this->hasMany(Satyalancana::class);

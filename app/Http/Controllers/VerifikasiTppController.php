@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\PengajuanTpp;
 use App\Models\User;
+use App\Notifications\TppDisetujuiNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class VerifikasiTppController extends Controller
 {
@@ -41,8 +43,10 @@ class VerifikasiTppController extends Controller
             'keterangan' => null, // Hapus keterangan penolakan jika ada
         ]);
 
-        // Opsional: Kirim notifikasi ke pengelola OPD bahwa pengajuan disetujui
-        // ... (logika notifikasi bisa ditambahkan di sini) ...
+        // Kirim notifikasi ke user yang membuat pengajuan bahwa pengajuannya disetujui
+        if ($pengajuanTpp->user) {
+            Notification::send($pengajuanTpp->user, new TppDisetujuiNotification($pengajuanTpp));
+        }
 
         return redirect()->route('verifikasi-tpp.index')
             ->with('success', 'Pengajuan TPP telah berhasil disetujui.');

@@ -13,6 +13,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
+        $roles = Role::orderBy('name')->get();
         $query = User::query();
 
         if ($request->filled('search')) {
@@ -23,9 +24,16 @@ class UserController extends Controller
             });
         }
 
+        // Filter berdasarkan role
+        $query->when($request->filled('role'), function ($q) use ($request) {
+            $q->whereHas('roles', function ($roleQuery) use ($request) {
+                $roleQuery->where('name', $request->role);
+            });
+        });
+
         $users = $query->with('roles')->latest()->paginate(10)->withQueryString();
 
-        return view('users.index', compact('users'));
+        return view('users.index', compact('users', 'roles'));
     }
 
     public function create()
@@ -73,6 +81,7 @@ class UserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'nip' => ['required', 'string', 'max:255', 'unique:' . User::class . ',nip,' . $user->id],
+            'nomor_hp' => ['nullable', 'string', 'max:20'], // Validasi untuk nomor_hp
             'roles' => ['required', 'array'], // <-- UBAH INI: dari 'role' menjadi 'roles' dan tipenya 'array'
             'opd_id' => ['nullable', 'exists:opds,id'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
@@ -81,6 +90,7 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'nip' => $request->nip,
+            'nomor_hp' => $request->nomor_hp, // Tambahkan nomor_hp ke update
             'opd_id' => $request->opd_id,
         ]);
 

@@ -50,10 +50,13 @@ class PegawaiImport implements ToCollection, WithHeadingRow, WithValidation, Wit
 
         // Siapkan data untuk tabel 'users'
         foreach ($rows as $row) {
+            // Ambil 8 digit pertama dari NIP untuk dijadikan password
+            $password = substr($row['nip'], 0, 8);
+
             $usersToUpsert[] = [
                 'nip' => $row['nip'],
                 'name' => $row['nama_lengkap'],
-                'password' => Hash::make('password123'), // Password default untuk user baru
+                'password' => Hash::make($password), // Password dari NIP
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

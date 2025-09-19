@@ -9,10 +9,9 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Opd;
 use App\Models\Jabatan; // <-- Penambahan import
-use Illuminate\Validation\Rule; // <-- Tambahkan ini
-use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PegawaiImport;
 use Maatwebsite\Excel\Validators\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class PegawaiController extends Controller

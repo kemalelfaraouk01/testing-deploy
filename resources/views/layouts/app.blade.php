@@ -79,7 +79,7 @@
                                                     <span x-show="unreadCount > 0"
                                                         class="text-xs font-medium text-white bg-red-500 rounded-full px-2 py-0.5"
                                                         x-text="`${unreadCount} Baru`"></span>
-                                                    <button @click.prevent="showNotificationDeleteModal = true" title="Bersihkan Semua Notifikasi"
+                                                    <button @click.prevent="$dispatch('open-delete-modal', { action: '{{ route('notifications.clearAll') }}' })" title="Bersihkan Semua Notifikasi"
                                                         class="ml-3 text-gray-400 hover:text-red-500 transition-colors"
                                                         x-show="notifications.length > 0">
                                                         <svg class="w-5 h-5" fill="none" stroke="currentColor"
@@ -210,9 +210,7 @@
     <x-success-toast />
     <x-error-modal />
 
-    <div x-data="notificationBell">
-        <x-confirm-delete-modal show="showDeleteModal" formAction="{{ route('notifications.clearAll') }}" />
-    </div>
+
 
     @if (session('notifications-cleared'))
         <script>

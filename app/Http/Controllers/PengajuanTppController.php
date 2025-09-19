@@ -62,7 +62,7 @@ class PengajuanTppController extends Controller
         $daftarTahun = range(date('Y'), date('Y') - 5);
         $daftarStatus = ['draft', 'diajukan', 'disetujui', 'ditolak', 'perlu_perbaikan'];
 
-        $pengajuanTpps = $query->with('opd')->latest()->paginate(10)->withQueryString();
+        $pengajuanTpps = $query->with(['opd', 'user'])->latest()->paginate(10)->withQueryString();
 
         return view('pengajuan-tpp.index', [
             'opds' => $opds,

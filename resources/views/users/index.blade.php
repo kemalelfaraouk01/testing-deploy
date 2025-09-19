@@ -22,16 +22,31 @@
                         </a>
                     </div>
 
-                    {{-- Form Pencarian --}}
+                    {{-- Form Pencarian dan Filter --}}
                     <form action="{{ route('users.index') }}" method="GET" class="mb-4">
-                        <div class="flex items-center">
-                            <input type="text" name="search" placeholder="Cari nama atau NIP..."
-                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full sm:w-1/3"
-                                value="{{ request('search') }}">
-                            <button type="submit"
-                                class="ml-2 inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
-                                Cari
-                            </button>
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
+                            <div class="flex-grow">
+                                <input type="text" name="search" placeholder="Cari nama atau NIP..."
+                                    class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                                    value="{{ request('search') }}">
+                            </div>
+                            <div class="flex-grow mt-2 sm:mt-0">
+                                <select name="role"
+                                    class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full">
+                                    <option value="">Semua Role</option>
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->name }}" {{ request('role') == $role->name ? 'selected' : '' }}>
+                                            {{ $role->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mt-2 sm:mt-0">
+                                <button type="submit"
+                                    class="w-full sm:w-auto inline-flex items-center justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
+                                    Filter
+                                </button>
+                            </div>
                         </div>
                     </form>
 
@@ -64,6 +79,10 @@
                                         NIP
                                     </th>
                                     <th
+                                        class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[150px]">
+                                        Nomor HP
+                                    </th>
+                                    <th
                                         class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider min-w-[200px]">
                                         Peran (Role)
                                     </th>
@@ -94,6 +113,9 @@
                                             {{ $user->nip }}
                                         </td>
                                         <td class="px-4 py-4 text-sm text-gray-900">
+                                            {{ $user->nomor_hp ?? '-' }}
+                                        </td>
+                                        <td class="px-4 py-4 text-sm text-gray-900">
                                             @if (!empty($user->getRoleNames()))
                                                 @foreach ($user->getRoleNames() as $roleName)
                                                     <span
@@ -119,7 +141,7 @@
                                 @empty
                                     <tr>
                                         {{-- ▼▼▼ 3. COLSPAN DISESUAIKAN MENJADI 5 ▼▼▼ --}}
-                                        <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-500">
+                                        <td colspan="7" class="px-6 py-12 text-center text-sm text-gray-500">
                                             <p class="text-lg font-medium text-gray-900 mb-1">Tidak ada data user</p>
                                             <p class="text-sm text-gray-500">Data user belum tersedia untuk ditampilkan.
                                             </p>

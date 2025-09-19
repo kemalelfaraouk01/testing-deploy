@@ -24,6 +24,14 @@
                                 :value="old('nip', $user->nip)" required />
                             <x-input-error :messages="$errors->get('nip')" class="mt-2" />
                         </div>
+
+                        {{-- Input Nomor HP --}}
+                        <div class="mt-4">
+                            <x-input-label for="nomor_hp" :value="__('Nomor HP (Format: 62...)')" />
+                            <x-text-input id="nomor_hp" class="block mt-1 w-full" type="text" name="nomor_hp"
+                                :value="old('nomor_hp', $user->nomor_hp)" />
+                            <x-input-error :messages="$errors->get('nomor_hp')" class="mt-2" />
+                        </div>
                         <div class="mt-4">
                             <x-input-label for="password" :value="__('Password Baru (Opsional)')" />
                             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" />
