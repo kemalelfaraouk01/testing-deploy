@@ -26,13 +26,10 @@ class SatyalancanaPerluPerbaikanNotification extends Notification
 
     public function toMail($notifiable): MailMessage
     {
-        $url = route('berkas-satyalancana.create', $this->satyalancana->id);
-
         return (new MailMessage)
                     ->subject('Perbaikan Berkas Usulan Satyalancana')
                     ->line('Terdapat perbaikan yang diperlukan untuk berkas usulan Satyalancana Anda.')
                     ->line('Catatan dari verifikator: ' . $this->satyalancana->keterangan)
-                    ->action('Perbaiki Berkas Sekarang', $url)
                     ->line('Mohon perbarui berkas Anda sesuai catatan di atas. Terima kasih.')
                     ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }
@@ -41,7 +38,7 @@ class SatyalancanaPerluPerbaikanNotification extends Notification
     {
         return [
             'message' => 'Usulan Satyalancana Anda perlu perbaikan. Alasan: ' . $this->satyalancana->keterangan,
-            'url' => route('berkas-satyalancana.create', $this->satyalancana->id), // Link ke halaman perbaikan
+            'url' => '#', // Link ke halaman perbaikan
         ];
     }
 }

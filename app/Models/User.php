@@ -85,6 +85,6 @@ class User extends Authenticatable
     {
         // Mengambil email dari relasi pegawai
         // Pastikan setiap user memiliki relasi pegawai dan data email di sana
-        return $this->pegawai->email;
+        return $this->pegawai?->email;
     }
 }

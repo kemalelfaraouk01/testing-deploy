@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\SatyalancanaDiajukanNotification;
+use App\Exports\SatyalancanaExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SatyalancanaController extends Controller
 {
@@ -50,6 +52,34 @@ class SatyalancanaController extends Controller
         return view('satyalancana.index', compact('eligible', 'daftarPeriode'));
     }
 
+    public function createBulkForm(Request $request)
+    {
+        $request->validate([
+            'pegawai_ids' => 'required|array|min:1',
+            'pegawai_ids.*' => 'exists:pegawais,id',
+            'masa_kerja' => 'required|in:10,20,30',
+            'periode' => 'required|string',
+        ], [
+            'pegawai_ids.required' => 'Anda harus memilih setidaknya satu pegawai untuk melanjutkan.',
+        ]);
+
+        $pegawais = Pegawai::with(['opd', 'user'])->whereIn('id', $request->pegawai_ids)->get();
+
+        // Data untuk dropdown
+        $slksLamaOptions = ['10 Tahun', '20 Tahun', 'Belum Dapat', 'Hilang'];
+        $msTmsOptions = ['MS', 'TMS'];
+        $tahunOptions = range(date('Y'), date('Y') - 5);
+
+        return view('satyalancana.create-bulk', [
+            'pegawais' => $pegawais,
+            'masa_kerja' => $request->masa_kerja,
+            'periode' => $request->periode,
+            'slksLamaOptions' => $slksLamaOptions,
+            'msTmsOptions' => $msTmsOptions,
+            'tahunOptions' => $tahunOptions,
+        ]);
+    }
+
     /**
      * ▼▼▼ INI FUNGSI YANG DIPERBAIKI ▼▼▼
      * Menyimpan usulan Satyalancana untuk banyak pegawai dari halaman index.
@@ -57,19 +87,21 @@ class SatyalancanaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pegawai_ids' => 'required|array|min:1',
-            'pegawai_ids.*' => 'exists:pegawais,id',
+            'proposals' => 'required|array|min:1',
+            'proposals.*.pegawai_id' => 'required|exists:pegawais,id',
             'masa_kerja' => 'required|in:10,20,30',
-            'periode' => 'required|string', // Validasi periode
+            'periode' => 'required|string',
         ], [
-            'pegawai_ids.required' => 'Anda harus memilih (mencentang) setidaknya satu pegawai untuk diusulkan.',
+            'proposals.required' => 'Tidak ada data usulan untuk diproses.',
         ]);
 
         $tahun = Carbon::now()->year;
         $jenisPenghargaan = 'Satyalancana Karya Satya ' . $request->masa_kerja . ' Tahun';
         $berhasil = 0;
 
-        foreach ($request->pegawai_ids as $pegawaiId) {
+        foreach ($request->proposals as $proposalData) {
+            $pegawaiId = $proposalData['pegawai_id'];
+
             $existing = Satyalancana::where('pegawai_id', $pegawaiId)
                 ->where('tahun_pengusulan', $tahun)
                 ->exists();
@@ -80,8 +112,16 @@ class SatyalancanaController extends Controller
                     'jenis_penghargaan' => $jenisPenghargaan,
                     'masa_kerja' => $request->masa_kerja,
                     'tahun_pengusulan' => $tahun,
-                    'periode' => $request->periode, // Simpan periode dari form
+                    'periode' => $request->periode,
                     'status' => 'menunggu_kelengkapan_berkas',
+                    // Data baru dari form detail
+                    'no_sk_hukdis' => $proposalData['no_sk_hukdis'] ?? null,
+                    'no_sk_cltn' => $proposalData['no_sk_cltn'] ?? null,
+                    'slks_lama' => $proposalData['slks_lama'] ?? null,
+                    'no_keppres' => $proposalData['no_keppres'] ?? null,
+                    'tanggal_keppres' => $proposalData['tanggal_keppres'] ?? null,
+                    'ms_tms' => $proposalData['ms_tms'] ?? null,
+                    'keterangan_operator' => $proposalData['keterangan_operator'] ?? null,
                 ]);
 
                 $pegawai = Pegawai::find($pegawaiId);
@@ -97,6 +137,12 @@ class SatyalancanaController extends Controller
             ->with('success', "$berhasil pegawai berhasil diusulkan untuk periode " . $request->periode);
     }
 
+    public function exportExcel(Request $request)
+    {
+        $periode = $request->input('periode');
+        return Excel::download(new SatyalancanaExport($periode), 'usulan_satyalancana.xlsx');
+    }
+
 
     /**
      * Fungsi-fungsi di bawah ini untuk halaman 'My Proposals' milik pegawai,
@@ -109,8 +155,8 @@ class SatyalancanaController extends Controller
         $usulans = Satyalancana::whereHas('pegawai', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })
-        ->latest()
-        ->paginate(10);
+            ->latest()
+            ->paginate(10);
 
         return view('satyalancana.my-proposals', compact('usulans'));
     }

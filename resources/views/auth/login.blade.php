@@ -63,8 +63,7 @@
 
                 {{-- CAPTCHA Section --}}
                 <div class="space-y-2">
-                    <x-input-label for="captcha" value="Verifikasi Keamanan"
-                        class="font-semibold text-gray-700" />
+                    <x-input-label for="captcha" value="Verifikasi Keamanan" class="font-semibold text-gray-700" />
 
                     {{-- Captcha Container --}}
                     <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">

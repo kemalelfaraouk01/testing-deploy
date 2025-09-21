@@ -26,14 +26,12 @@ class SatyalancanaDiajukanNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('berkas-satyalancana.create', $this->satyalancana->id);
         $masaKerja = $this->satyalancana->masa_kerja;
 
         return (new MailMessage)
                     ->subject("Usulan Satyalancana {$masaKerja} Tahun")
                     ->line("Anda telah diusulkan untuk menerima penghargaan Satyalancana {$masaKerja} tahun.")
-                    ->line('Untuk melanjutkan proses, mohon lengkapi berkas persyaratan Anda dengan menekan tombol di bawah ini.')
-                    ->action('Lengkapi Berkas Satyalancana', $url)
+                    ->line('Untuk melanjutkan proses, mohon lengkapi berkas persyaratan Anda melalui aplikasi.')
                     ->line('Terima kasih.')
                     ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }

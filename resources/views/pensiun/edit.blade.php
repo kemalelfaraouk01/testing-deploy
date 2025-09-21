@@ -81,7 +81,7 @@
                                 <div class="flex items-center justify-between p-3 border rounded-lg">
                                     <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
                                     @if ($pensiun->$field)
-                                        <a href="{{ Storage::url($pensiun->$field) }}" target="_blank" class="inline-flex items-center px-3 py-1 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                        <a href="{{ route('pensiun.view-berkas', ['pensiun' => $pensiun->id, 'field' => $field]) }}" target="_blank" class="inline-flex items-center px-3 py-1 text-sm font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">
                                             Lihat
                                         </a>
                                     @else

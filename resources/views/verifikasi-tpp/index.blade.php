@@ -21,7 +21,7 @@
                 <div class="p-6">
                     @if ($pengajuanTpps->count())
                         <!-- Desktop Table View -->
-                        <div class="hidden lg:block overflow-x-auto rounded-lg border border-gray-200">
+                        <div class="hidden md:block overflow-x-auto rounded-lg border border-gray-200">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
@@ -55,7 +55,7 @@
                         </div>
 
                         <!-- Mobile Card View -->
-                        <div class="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-6">
                             @foreach ($pengajuanTpps as $pengajuan)
                                 <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col">
                                     <div class="p-5 flex-grow">

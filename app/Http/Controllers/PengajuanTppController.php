@@ -104,7 +104,7 @@ class PengajuanTppController extends Controller
         $this->authorize('update', $pengajuanTpp);
 
         if ($pengajuanTpp->status !== 'draft') {
-            return redirect()->route('pengajuan-tpp.index')->with('error', 'Pengajuan ini sudah dikirim dan tidak bisa diubah lagi.');
+            return redirect()->route('pengajuan-tpp.index')->with('error', 'Pengajuan ini sudah pernah dibuat dan tidak bisa diajukan lagi');
         }
 
         $opd = $pengajuanTpp->opd;
@@ -155,7 +155,7 @@ class PengajuanTppController extends Controller
             if (!$request->user()->hasAnyRole(['Admin', 'Pengelola', 'Verifikasi TPP'])) {
                 abort(403, 'AKSES DITOLAK.');
             }
-        } 
+        }
         // Jika hash ada, validasi seperti biasa.
         elseif (!hash_equals($pengajuanTpp->getRouteHash(), $request->hash)) {
             abort(403, 'URL TIDAK VALID.');

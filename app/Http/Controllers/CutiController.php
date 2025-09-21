@@ -19,7 +19,7 @@ class CutiController extends Controller
         $pegawai = Auth::user()->pegawai;
 
         // Ambil data cuti jika user memiliki profil pegawai
-        $cutis = $pegawai ? $pegawai->cutis()->latest()->paginate(10) : collect();
+        $cutis = $pegawai ? $pegawai->cutis()->latest()->paginate(10) : new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
 
         return view('cuti.index', compact('cutis'));
     }
@@ -31,7 +31,7 @@ class CutiController extends Controller
     {
         $pegawai = Auth::user()->pegawai;
         if (!$pegawai) {
-            return redirect()->route('cuti.index')->with('error', 'Profil pegawai Anda tidak ditemukan untuk menghitung sisa cuti.');
+            return redirect()->route('cuti.index')->with('error', 'Profil pegawai Anda tidak ditemukan untuk menghitung sisa cuti, harap untuk mengisi profil Anda terlebih dahulu.');
         }
 
         $sisaCuti = SisaCuti::where('pegawai_id', $pegawai->id)->where('tahun', date('Y'))->first();

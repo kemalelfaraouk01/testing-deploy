@@ -33,7 +33,7 @@ class TppBaruNotification extends Notification
      */
     public function via($notifiable)
     {
-        return [FonnteChannel::class, 'mail'];
+        return ['mail'];
     }
 
     /**
@@ -43,13 +43,11 @@ class TppBaruNotification extends Notification
     {
         $opd = $this->pengajuanTpp->opd->nama_opd;
         $periode = $this->pengajuanTpp->created_at->format('F Y');
-        $url = route('verifikasi-tpp.index');
 
         return (new MailMessage)
                     ->subject('Pemberitahuan Pengajuan TPP Baru')
                     ->line("Ada pengajuan TPP baru dari OPD: {$opd} untuk periode {$periode}.")
                     ->line('Mohon untuk segera melakukan verifikasi.')
-                    ->action('Lihat Detail Pengajuan', $url)
                     ->line('Terima kasih telah menggunakan aplikasi kami!')
                     ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }
@@ -65,7 +63,6 @@ class TppBaruNotification extends Notification
         // Gunakan relasi ->opd yang merupakan belongsTo dan sudah pasti ada
         $opd = $this->pengajuanTpp->opd->nama_opd; // Menggunakan nama_opd sesuai file model
         $periode = $this->pengajuanTpp->created_at->format('F Y');
-        $url = route('verifikasi-tpp.index');
 
         return "Pemberitahuan Pengajuan TPP Baru
 
@@ -73,7 +70,7 @@ Ada pengajuan TPP baru dari:
 *OPD:* {$opd}
 *Periode:* {$periode}
 
-Mohon untuk segera melakukan verifikasi. Anda dapat melihat detailnya di: {$url}
+Mohon untuk segera melakukan verifikasi.
 
 Terima kasih.";
     }

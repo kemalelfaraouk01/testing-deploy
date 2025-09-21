@@ -12,6 +12,7 @@ use App\Models\Jabatan; // <-- Penambahan import
 use App\Imports\PegawaiImport;
 use Maatwebsite\Excel\Validators\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Validation\Rule;
 
 
 class PegawaiController extends Controller
@@ -160,6 +161,7 @@ class PegawaiController extends Controller
      */
     public function edit(Pegawai $pegawai)
     {
+        $pegawai->load('user'); // Eager load relasi user
         $opds = Opd::all();
         $jabatans = Jabatan::orderBy('nama_jabatan')->get();
         $statuses = Pegawai::$selectable_statuses; // Ambil status dari model

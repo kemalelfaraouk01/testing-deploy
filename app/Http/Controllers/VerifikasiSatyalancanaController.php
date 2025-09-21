@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class VerifikasiSatyalancanaController extends Controller
 {
@@ -75,5 +76,26 @@ class VerifikasiSatyalancanaController extends Controller
         // Redirect kembali ke halaman detail, bukan ke index
         return redirect()->route('verifikasi-satyalancana.show', $satyalancana)
             ->with('success', 'Usulan telah dikembalikan kepada pegawai untuk perbaikan.');
+    }
+
+    public function viewBerkas(Satyalancana $satyalancana, $field)
+    {
+        // Daftar kolom berkas yang valid untuk keamanan
+        $allowedFields = [
+            'file_drh', 'file_sk_cpns', 'file_sk_pangkat_terakhir', 'file_sk_jabatan_terakhir',
+            'file_surat_pernyataan_disiplin', 'file_skp', 'file_sptjm', 'file_piagam_sebelumnya'
+        ];
+
+        if (!in_array($field, $allowedFields)) {
+            abort(404, 'Berkas tidak valid.');
+        }
+
+        $filePath = $satyalancana->{$field};
+
+        if (!$filePath || !Storage::disk('public')->exists($filePath)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        return response()->file(storage_path('app/public/' . $filePath));
     }
 }

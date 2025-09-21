@@ -119,31 +119,58 @@ class DashboardController extends Controller
             // ▲▲▲ AKHIR PERBAIKAN ▲▲▲
         }
 
-        // Kode untuk user biasa tidak diubah sama sekali.
-        $activities = ActivityLog::with(['user', 'subject'])
-            ->where('user_id', $user->id)
-            ->latest()
-            ->take(5)
-            ->get();
+        // Logika untuk User Biasa (Pegawai)
+        $pegawai = $user->pegawai;
+        $totalCuti = 0;
+        $sisaCutiTahunan = 0;
+        $sisaCutiBesar = 0;
+        $sisaCutiSakit = 0;
+        $sisaCutiMelahirkan = 0;
+        $sisaCutiAlasanPenting = 0;
 
-        $pegawaiId = $user->pegawai->id ?? null;
-        $tugasPensiun = null;
-        $tugasSatyalancana = null;
+        // Ambil data tugas dan aktivitas untuk user biasa
+        $activities = ActivityLog::where('user_id', $user->id)->latest()->take(5)->get();
+        $tugasPensiun = Pensiun::where('pegawai_id', $user->pegawai?->id)
+            ->whereIn('status', ['Menunggu Berkas', 'Perlu Perbaikan'])
+            ->first();
+        $tugasSatyalancana = Satyalancana::where('pegawai_id', $user->pegawai?->id)
+            ->whereIn('status', ['menunggu_kelengkapan_berkas', 'perlu_perbaikan'])
+            ->first();
 
-        if ($pegawaiId) {
-            $tugasPensiun = Pensiun::where('pegawai_id', $pegawaiId)
-                ->whereIn('status', ['Perlu Perbaikan', 'Menunggu Berkas'])
-                ->first();
-
-            $tugasSatyalancana = Satyalancana::where('pegawai_id', $pegawaiId)
-                ->whereIn('status', ['menunggu_kelengkapan_berkas', 'perlu_perbaikan'])
-                ->first();
+        if ($pegawai) {
+            $totalCuti = Cuti::where('pegawai_id', $pegawai->id)->count();
+            $sisaCuti = $pegawai->sisaCuti;
+            if ($sisaCuti) {
+                $sisaCutiTahunan = $sisaCuti->sisa_cuti_tahunan;
+                $sisaCutiBesar = $sisaCuti->sisa_cuti_besar;
+                $sisaCutiSakit = $sisaCuti->sisa_cuti_sakit;
+                $sisaCutiMelahirkan = $sisaCuti->sisa_cuti_melahirkan;
+                $sisaCutiAlasanPenting = $sisaCuti->sisa_cuti_alasan_penting;
+            }
         }
 
-        return view('user_dashboard', [
-            'tugasPensiun' => $tugasPensiun,
-            'tugasSatyalancana' => $tugasSatyalancana,
-            'activities' => $activities,
-        ]);
+        return view('user_dashboard', compact(
+            'totalCuti', 
+            'sisaCutiTahunan', 
+            'sisaCutiBesar', 
+            'sisaCutiSakit', 
+            'sisaCutiMelahirkan', 
+            'sisaCutiAlasanPenting',
+            'activities',
+            'tugasPensiun',
+            'tugasSatyalancana'
+        ));
+    }
+
+    public function debugNotification()
+    {
+        $user = auth()->user();
+        $latestNotification = $user->notifications()->latest()->first();
+
+        if ($latestNotification) {
+            return response()->json($latestNotification);
+        }
+
+        return response()->json(['message' => 'Tidak ada notifikasi ditemukan untuk user ini.']);
     }
 }

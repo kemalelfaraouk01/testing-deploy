@@ -25,14 +25,12 @@ class BerkasSatyalancanaLengkapNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('verifikasi-satyalancana.index');
         $namaPegawai = $this->satyalancana->pegawai->nama_lengkap;
 
         return (new MailMessage)
                     ->subject('Berkas Satyalancana Lengkap')
                     ->line("Berkas pengajuan Satyalancana dari {$namaPegawai} telah lengkap.")
                     ->line('Mohon untuk segera ditindaklanjuti.')
-                    ->action('Lihat Detail', $url)
                     ->line('Terima kasih.')
                     ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }

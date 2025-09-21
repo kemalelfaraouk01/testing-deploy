@@ -6,6 +6,7 @@ use App\Models\Cuti;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 use App\Models\SisaCuti;
 use Carbon\Carbon;
 
@@ -137,5 +138,16 @@ class VerifikasiCutiController extends Controller
             12 => 'Desember'
         ];
         return view('verifikasi-cuti.show', compact('cuti', 'daftarBulan'));
+    }
+
+    public function viewBerkas(Cuti $cuti)
+    {
+        $filePath = $cuti->file_lampiran;
+
+        if (!$filePath || !Storage::disk('public')->exists($filePath)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        return response()->file(storage_path('app/public/' . $filePath));
     }
 }

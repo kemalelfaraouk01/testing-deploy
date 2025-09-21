@@ -56,6 +56,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
     Route::delete('/notifications/clear-all', [NotificationController::class, 'clearAll'])->name('notifications.clearAll');
 
+    // Rute sementara untuk debug notifikasi
+    Route::get('/debug-notifikasi', [DashboardController::class, 'debugNotification'])->name('debug.notification');
+
     Route::get('/cuti', [CutiController::class, 'index'])->name('cuti.index');
     Route::get('/cuti/create', [CutiController::class, 'create'])->name('cuti.create');
     Route::post('/cuti', [CutiController::class, 'store'])->name('cuti.store');
@@ -137,9 +140,12 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['role:Admin|Pengelola Satyalancana'])->group(function () {
         Route::get('/usulan-satyalancana', [SatyalancanaController::class, 'index'])->name('satyalancana.index');
+        Route::get('/usulan-satyalancana/create-bulk', [SatyalancanaController::class, 'createBulkForm'])->name('satyalancana.create-bulk'); // Rute baru untuk form detail
+        Route::get('/usulan-satyalancana/export', [SatyalancanaController::class, 'exportExcel'])->name('satyalancana.export'); // Rute baru untuk export excel
         Route::post('/usulan-satyalancana', [SatyalancanaController::class, 'store'])->name('satyalancana.store');
         Route::get('verifikasi-satyalancana', [VerifikasiSatyalancanaController::class, 'index'])->name('verifikasi-satyalancana.index');
         Route::get('verifikasi-satyalancana/{satyalancana}', [VerifikasiSatyalancanaController::class, 'show'])->name('verifikasi-satyalancana.show');
+        Route::get('verifikasi-satyalancana/{satyalancana}/berkas/{field}', [VerifikasiSatyalancanaController::class, 'viewBerkas'])->name('verifikasi-satyalancana.view-berkas'); // Rute baru untuk lihat berkas
         Route::post('verifikasi-satyalancana/{satyalancana}/approve', [VerifikasiSatyalancanaController::class, 'approve'])->name('verifikasi-satyalancana.approve');
         Route::post('verifikasi-satyalancana/{satyalancana}/reject', [VerifikasiSatyalancanaController::class, 'reject'])->name('verifikasi-satyalancana.reject');
     });
@@ -147,6 +153,7 @@ Route::middleware('auth')->group(function () {
     // --- RUTE PENSIUN ---
     Route::middleware(['role:Admin|Pengelola Pensiun'])->group(function () {
         Route::get('pensiun/cek-status', [PensiunController::class, 'cekStatus'])->name('pensiun.cek-status');
+        Route::get('pensiun/{pensiun}/berkas/{field}', [PensiunController::class, 'viewBerkas'])->name('pensiun.view-berkas'); // Rute baru untuk lihat berkas
         Route::resource('pensiun', PensiunController::class);
         Route::patch('pensiun/{pensiun}/approve', [PensiunController::class, 'approve'])->name('pensiun.approve');
         Route::post('pensiun/{pensiun}/request-correction', [PensiunController::class, 'requestCorrection'])->name('pensiun.request-correction');
@@ -156,6 +163,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:Admin|Verifikasi TPP'])->group(function () {
         Route::get('/verifikasi-tpp', [VerifikasiTppController::class, 'index'])->name('verifikasi-tpp.index');
         Route::get('/verifikasi-tpp/{pengajuanTpp}', [VerifikasiTppController::class, 'show'])->name('verifikasi-tpp.show');
+        Route::get('/verifikasi-tpp/{pengajuanTpp}/berkas/{field}', [VerifikasiTppController::class, 'viewBerkas'])->name('verifikasi-tpp.view-berkas');
         Route::post('/verifikasi-tpp/{pengajuanTpp}/setujui', [VerifikasiTppController::class, 'approve'])->name('verifikasi-tpp.approve');
         Route::post('/verifikasi-tpp/{pengajuanTpp}/tolak', [VerifikasiTppController::class, 'reject'])->name('verifikasi-tpp.reject');
         Route::patch('/verifikasi-tpp/{pengajuanTpp}/update-besaran', [VerifikasiTppController::class, 'updateBesaran'])->name('verifikasi-tpp.update-besaran');
@@ -167,6 +175,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['role:Admin|Kepala Bidang|Kepala OPD'])->group(function () {
         Route::get('/verifikasi-cuti', [VerifikasiCutiController::class, 'index'])->name('verifikasi-cuti.index');
         Route::get('/verifikasi-cuti/{cuti}', [VerifikasiCutiController::class, 'show'])->name('verifikasi-cuti.show');
+        Route::get('/verifikasi-cuti/{cuti}/berkas', [VerifikasiCutiController::class, 'viewBerkas'])->name('verifikasi-cuti.view-berkas');
         Route::post('/verifikasi-cuti/{cuti}/approve', [VerifikasiCutiController::class, 'approve'])->name('verifikasi-cuti.approve');
         Route::post('/verifikasi-cuti/{cuti}/reject', [VerifikasiCutiController::class, 'reject'])->name('verifikasi-cuti.reject');
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');

@@ -28,7 +28,7 @@
                     {{-- Tombol di Kanan --}}
                     <div class="flex flex-wrap gap-3">
                         <a href="{{ route('pegawai.import.form') }}"
-                            class="group inline-flex items-center px-4 py-2 bg-green-100 text-green-700 hover:bg-green-200 border border-green-200 text-sm font-medium rounded-lg shadow-sm">
+                            class="group inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 hover:bg-teal-200 border border-teal-200 text-sm font-medium rounded-lg shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                 class="w-4 h-4 mr-2">
                                 <path

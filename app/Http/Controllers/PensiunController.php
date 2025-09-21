@@ -8,6 +8,7 @@ use App\Notifications\PensiunDiajukanNotification;
 use App\Notifications\PensiunPerluPerbaikanNotification;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class PensiunController extends Controller
 {
@@ -184,5 +185,23 @@ class PensiunController extends Controller
             ->paginate(20);
 
         return view('pensiun.cek_status', compact('pegawais'));
+    }
+
+    public function viewBerkas(Pensiun $pensiun, $field)
+    {
+        // Ambil daftar kolom berkas yang valid dari model untuk keamanan
+        $allowedFields = array_keys(Pensiun::$berkasFields);
+
+        if (!in_array($field, $allowedFields)) {
+            abort(404, 'Jenis berkas tidak valid.');
+        }
+
+        $filePath = $pensiun->{$field};
+
+        if (!$filePath || !Storage::disk('public')->exists($filePath)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        return response()->file(storage_path('app/public/' . $filePath));
     }
 }

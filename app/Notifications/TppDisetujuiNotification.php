@@ -37,13 +37,11 @@ class TppDisetujuiNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('pengajuan-tpp.show', $this->pengajuanTpp->id);
         $namaBulan = date('F', mktime(0, 0, 0, $this->pengajuanTpp->periode_bulan, 10));
 
         return (new MailMessage)
                     ->subject('Pengajuan TPP Anda Telah Disetujui')
                     ->line("Selamat! Pengajuan TPP Anda untuk periode {$namaBulan} {$this->pengajuanTpp->periode_tahun} telah disetujui.")
-                    ->action('Lihat Detail', $url)
                     ->line('Terima kasih telah menggunakan aplikasi kami.')
                     ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }
@@ -58,7 +56,7 @@ class TppDisetujuiNotification extends Notification implements ShouldQueue
         return [
             'pengajuan_id' => $this->pengajuanTpp->id,
             'message' => 'Selamat! Pengajuan TPP Anda untuk periode ' . date('F', mktime(0, 0, 0, $this->pengajuanTpp->periode_bulan, 10)) . ' ' . $this->pengajuanTpp->periode_tahun . ' telah disetujui.',
-            'url' => route('pengajuan-tpp.show', $this->pengajuanTpp->id),
+            'url' => '#',
         ];
     }
 }

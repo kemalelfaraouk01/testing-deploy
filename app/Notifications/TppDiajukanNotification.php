@@ -28,7 +28,7 @@ class TppDiajukanNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['database', FonnteChannel::class, 'mail']; // Tambahkan FonnteChannel dan mail
+        return ['database', 'mail']; // Hapus FonnteChannel
     }
 
     /**
@@ -36,19 +36,15 @@ class TppDiajukanNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('pengajuan-tpp.show', [
-            'pengajuanTpp' => $this->pengajuanTpp->id,
-            'hash' => $this->pengajuanTpp->getRouteHash()
-        ]);
-
         $namaBulan = date('F', mktime(0, 0, 0, $this->pengajuanTpp->periode_bulan, 10));
 
         return (new MailMessage)
+                    ->greeting('Hello! ' . $notifiable->name)
                     ->subject('Pengajuan TPP Baru Memerlukan Verifikasi')
                     ->line('Ada pengajuan TPP baru yang memerlukan verifikasi Anda.')
-                    ->line("Dari OPD: {$this->pengajuanTpp->opd->nama_opd}")
+                    ->line("Dari OPD: {$this->pengajuanTpp->opd?->nama_opd}")
                     ->line("Periode: Bulan {$namaBulan} Tahun {$this->pengajuanTpp->periode_tahun}")
-                    ->action('Lihat Detail & Verifikasi', $url)
+                    ->line('Silakan periksa aplikasi untuk detail lebih lanjut.')
                     ->line('Terima kasih.')
                     ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }
@@ -58,18 +54,13 @@ class TppDiajukanNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        $url = route('pengajuan-tpp.show', [
-            'pengajuanTpp' => $this->pengajuanTpp->id,
-            'hash' => $this->pengajuanTpp->getRouteHash()
-        ]);
-
         return [
             'pengajuan_id' => $this->pengajuanTpp->id,
-            'opd_nama' => $this->pengajuanTpp->opd->nama_opd,
+            'opd_nama' => $this->pengajuanTpp->opd?->nama_opd,
             'periode_bulan' => $this->pengajuanTpp->periode_bulan,
             'periode_tahun' => $this->pengajuanTpp->periode_tahun,
-            'message' => 'Pengajuan TPP baru dari ' . $this->pengajuanTpp->opd->nama_opd . ' telah masuk.',
-            'url' => $url // Menambahkan URL lengkap
+            'message' => 'Pengajuan TPP baru dari ' . ($this->pengajuanTpp->opd?->nama_opd ?? 'OPD tidak diketahui') . ' telah masuk.',
+            'url' => route('pengajuan-tpp.show', ['pengajuanTpp' => $this->pengajuanTpp->id, 'hash' => $this->pengajuanTpp->getRouteHash()]),
         ];
     }
 
@@ -78,21 +69,15 @@ class TppDiajukanNotification extends Notification implements ShouldQueue
      */
     public function toFonnte(object $notifiable): string
     {
-        $url = route('pengajuan-tpp.show', [
-            'pengajuanTpp' => $this->pengajuanTpp->id,
-            'hash' => $this->pengajuanTpp->getRouteHash()
-        ]);
-
         $namaBulan = date('F', mktime(0, 0, 0, $this->pengajuanTpp->periode_bulan, 10));
 
         return "*Pemberitahuan Pengajuan TPP Baru*\n\n" .
                "Ada pengajuan TPP baru yang memerlukan verifikasi Anda.\n\n" .
                "*Dari OPD:*\n" .
-               "{$this->pengajuanTpp->opd->nama_opd}\n\n" .
+               "{$this->pengajuanTpp->opd?->nama_opd}\n\n" .
                "*Periode:*\n" .
                "Bulan {$namaBulan} Tahun {$this->pengajuanTpp->periode_tahun}\n\n" .
-               "Silakan klik tautan di bawah ini untuk melihat detail dan melakukan verifikasi:\n" .
-               "{$url}\n\n" .
+               "Silakan periksa aplikasi untuk melakukan verifikasi.\n\n" .
                "Terima kasih.";
     }
 }

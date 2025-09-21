@@ -63,7 +63,7 @@
                                     <div class="sm:col-span-2">
                                         <dt class="text-sm font-medium text-gray-500">Berkas Lampiran</dt>
                                         <dd class="mt-1">
-                                            <a href="{{ asset('storage/' . $cuti->file_lampiran) }}" target="_blank"
+                                            <a href="{{ route('verifikasi-cuti.view-berkas', $cuti) }}" target="_blank"
                                                 class="inline-flex items-center px-3 py-1 bg-blue-500 text-white text-xs font-bold rounded-md hover:bg-blue-600">
                                                 Lihat Lampiran
                                             </a>

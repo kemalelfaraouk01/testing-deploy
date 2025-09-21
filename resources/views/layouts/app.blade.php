@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="turbo-prefetch-hover-enabled" content="true">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'SIYANTI') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-bkpsdm.png') }}">
+
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -79,7 +81,9 @@
                                                     <span x-show="unreadCount > 0"
                                                         class="text-xs font-medium text-white bg-red-500 rounded-full px-2 py-0.5"
                                                         x-text="`${unreadCount} Baru`"></span>
-                                                    <button @click.prevent="$dispatch('open-delete-modal', { action: '{{ route('notifications.clearAll') }}' })" title="Bersihkan Semua Notifikasi"
+                                                    <button
+                                                        @click.prevent="$dispatch('open-delete-modal', { action: '{{ route('notifications.clearAll') }}' })"
+                                                        title="Bersihkan Semua Notifikasi"
                                                         class="ml-3 text-gray-400 hover:text-red-500 transition-colors"
                                                         x-show="notifications.length > 0">
                                                         <svg class="w-5 h-5" fill="none" stroke="currentColor"
@@ -96,9 +100,8 @@
                                                 <div x-show="notifications.length > 0">
                                                     <template x-for="notification in notifications"
                                                         :key="notification.id">
-                                                        <a :href="notification.data.url || '#'
-                                                        '"
-                                                            @click.prevent="markAsRead(notification.id, notification.data.url)"
+                                                        <a :href="notification.data.url || '#'"
+                                                            x-on:click.prevent="markAsRead(notification.id, notification.data.url)"
                                                             class="block px-4 py-3 text-sm notification-item hover:bg-gray-100 transition duration-150 ease-in-out"
                                                             :class="{ 'bg-blue-50': !notification.read_at }">
                                                             <div class="flex items-center">
@@ -121,6 +124,7 @@
                                                                 </div>
                                                                 <div class="flex-grow min-w-0 ml-2">
                                                                     <p class="truncate"
+                                                                        :title="notification.data.message"
                                                                         :class="!notification.read_at ?
                                                                             'font-bold text-gray-800' : 'text-gray-600'"
                                                                         x-text="notification.data.message"></p>

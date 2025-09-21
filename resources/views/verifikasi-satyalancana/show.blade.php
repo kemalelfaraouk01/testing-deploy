@@ -128,7 +128,7 @@
                                         </div>
                                         <div class="flex-shrink-0 ml-4">
                                             @if ($satyalancana->{$file['field']})
-                                                <a href="{{ asset('storage/' . $satyalancana->{$file['field']}) }}"
+                                                <a href="{{ route('verifikasi-satyalancana.view-berkas', ['satyalancana' => $satyalancana->id, 'field' => $file['field']]) }}"
                                                     target="_blank"
                                                     class="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-md transition-colors duration-200">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor"

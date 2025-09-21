@@ -26,6 +26,13 @@ class Satyalancana extends Model
         'file_skp',
         'file_sptjm',
         'file_piagam_sebelumnya',
+        'no_sk_hukdis',
+        'no_sk_cltn',
+        'slks_lama',
+        'no_keppres',
+        'tanggal_keppres',
+        'ms_tms',
+        'keterangan_operator',
     ];
     public function pegawai(): BelongsTo
     {

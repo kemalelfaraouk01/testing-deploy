@@ -57,65 +57,46 @@
                             <h3 class="text-lg font-semibold text-gray-900">Informasi Pengajuan</h3>
                         </div>
                         <div class="p-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <div class="text-sm text-gray-500 mb-1">No. Pengajuan</div>
-                                    <div class="text-base font-semibold text-gray-800">
-                                        #{{ $pengajuanTpp->nomor_pengajuan ?? 'N/A' }}
-                                    </div>
+                            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8">
+                                <div class="md:col-span-1">
+                                    <dt class="text-sm font-medium text-gray-500">No. Pengajuan</dt>
+                                    <dd class="mt-1 text-base font-semibold text-gray-900">#{{ $pengajuanTpp->nomor_pengajuan ?? 'N/A' }}</dd>
                                 </div>
-
-                                <div>
-                                    <div class="text-sm text-gray-500 mb-1">Periode</div>
-                                    <div class="text-base font-medium text-gray-900">
-                                        {{ $daftarBulan[$pengajuanTpp->periode_bulan] }}
-                                        {{ $pengajuanTpp->periode_tahun }}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="text-sm text-gray-500 mb-1">Status</div>
-                                    <div>
+                                <div class="md:col-span-1">
+                                    <dt class="text-sm font-medium text-gray-500">Status</dt>
+                                    <dd class="mt-1">
                                         @if ($pengajuanTpp->status == 'diajukan')
-                                            <span
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                                                Menunggu Verifikasi
-                                            </span>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">Menunggu Verifikasi</span>
                                         @elseif($pengajuanTpp->status == 'disetujui')
-                                            <span
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                                                Disetujui
-                                            </span>
-                                        @elseif($pengajuanTpp->status == 'ditolak')
-                                            <span
-                                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                                                Ditolak
-                                            </span>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Disetujui</span>
+                                        @elseif($pengajuanTpp->status == 'ditolak' || $pengajuanTpp->status == 'perlu_perbaikan')
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">{{ $pengajuanTpp->status == 'ditolak' ? 'Ditolak' : 'Perlu Perbaikan' }}</span>
                                         @endif
-                                    </div>
+                                    </dd>
                                 </div>
-
+                                <div class="md:col-span-1">
+                                    <dt class="text-sm font-medium text-gray-500">Unit Kerja</dt>
+                                    <dd class="mt-1 text-base text-gray-900">{{ $pengajuanTpp->opd?->nama_opd ?? '[OPD tidak ditemukan]' }}</dd>
+                                </div>
+                                <div class="md:col-span-1">
+                                    <dt class="text-sm font-medium text-gray-500">Periode</dt>
+                                    <dd class="mt-1 text-base text-gray-900">{{ $daftarBulan[$pengajuanTpp->periode_bulan] }} {{ $pengajuanTpp->periode_tahun }}</dd>
+                                </div>
+                                <div class="md:col-span-1">
+                                    <dt class="text-sm font-medium text-gray-500">Diajukan Oleh</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ $pengajuanTpp->user?->name ?? 'Sistem' }}</dd>
+                                </div>
+                                <div class="md:col-span-1">
+                                    <dt class="text-sm font-medium text-gray-500">Tanggal Diajukan</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ $pengajuanTpp->created_at->translatedFormat('d F Y, H:i') }} WIB</dd>
+                                </div>
+                                @if($pengajuanTpp->keterangan)
                                 <div class="md:col-span-2">
-                                    <div class="text-sm text-gray-500 mb-1">Unit Kerja</div>
-                                    <div class="text-base font-medium text-gray-900">
-                                        {{ $pengajuanTpp->opd?->nama_opd ?? '[OPD tidak ditemukan]' }}
-                                    </div>
+                                    <dt class="text-sm font-medium text-gray-500">Deskripsi</dt>
+                                    <dd class="mt-1 text-sm text-gray-900">{{ $pengajuanTpp->keterangan }}</dd>
                                 </div>
-
-                                <div>
-                                    <div class="text-sm text-gray-500 mb-1">Tanggal Diajukan</div>
-                                    <div class="text-sm text-gray-900">
-                                        {{ $pengajuanTpp->created_at->translatedFormat('d F Y, H:i') }} WIB
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="text-sm text-gray-500 mb-1">Diajukan Oleh</div>
-                                    <div class="text-sm text-gray-900">
-                                        {{ $pengajuanTpp->user?->name ?? 'Sistem' }}
-                                    </div>
-                                </div>
-                            </div>
+                                @endif
+                            </dl>
                         </div>
                     </div>
 
@@ -161,7 +142,7 @@
                                     </div>
                                     <div class="flex-shrink-0">
                                         @if ($pengajuanTpp->berkas_tpp)
-                                            <a href="{{ asset('storage/' . $pengajuanTpp->berkas_tpp) }}"
+                                            <a href="{{ route('verifikasi-tpp.view-berkas', ['pengajuanTpp' => $pengajuanTpp->id, 'field' => 'berkas_tpp']) }}"
                                                 target="_blank"
                                                 class="inline-flex items-center px-3 py-2 text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors duration-200">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
@@ -212,7 +193,7 @@
                                     </div>
                                     <div class="flex-shrink-0">
                                         @if ($pengajuanTpp->berkas_spj)
-                                            <a href="{{ asset('storage/' . $pengajuanTpp->berkas_spj) }}"
+                                            <a href="{{ route('verifikasi-tpp.view-berkas', ['pengajuanTpp' => $pengajuanTpp->id, 'field' => 'berkas_spj']) }}"
                                                 target="_blank"
                                                 class="inline-flex items-center px-3 py-2 text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors duration-200">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
@@ -263,7 +244,7 @@
                                     </div>
                                     <div class="flex-shrink-0">
                                         @if ($pengajuanTpp->berkas_pernyataan)
-                                            <a href="{{ asset('storage/' . $pengajuanTpp->berkas_pernyataan) }}"
+                                            <a href="{{ route('verifikasi-tpp.view-berkas', ['pengajuanTpp' => $pengajuanTpp->id, 'field' => 'berkas_pernyataan']) }}"
                                                 target="_blank"
                                                 class="inline-flex items-center px-3 py-2 text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors duration-200">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
@@ -314,7 +295,7 @@
                                     </div>
                                     <div class="flex-shrink-0">
                                         @if ($pengajuanTpp->berkas_pengantar)
-                                            <a href="{{ asset('storage/' . $pengajuanTpp->berkas_pengantar) }}"
+                                            <a href="{{ route('verifikasi-tpp.view-berkas', ['pengajuanTpp' => $pengajuanTpp->id, 'field' => 'berkas_pengantar']) }}"
                                                 target="_blank"
                                                 class="inline-flex items-center px-3 py-2 text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors duration-200">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
@@ -365,97 +346,65 @@
                         </div>
                     </div>
 
-                    <!-- TPP Amount -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                        <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-yellow-50 to-indigo-50">
-                            <h3 class="text-lg font-semibold text-gray-900">Besaran TPP</h3>
-                        </div>
-                        <div class="p-6">
-                            @if ($pengajuanTpp->status == 'diajukan')
-                                <form action="{{ route('verifikasi-tpp.update-besaran', $pengajuanTpp->id) }}"
-                                    method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <div class="space-y-4">
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                        <div class="lg:col-span-3">
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 h-full">
+                                <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-yellow-50 to-indigo-50">
+                                    <h3 class="text-lg font-semibold text-gray-900">Verifikasi & Besaran TPP</h3>
+                                </div>
+                                <div class="p-6">
+                                    @if ($pengajuanTpp->status == 'diajukan')
+                                        <form action="{{ route('verifikasi-tpp.update-besaran', $pengajuanTpp->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <x-input-label for="besaran_tpp_diajukan" value="Total Besaran TPP (Rp)" />
+                                                    <x-text-input id="besaran_tpp_diajukan" name="besaran_tpp_diajukan" type="number" x-model.number="besaranTpp" class="block mt-1 w-full" :value="old('besaran_tpp_diajukan', $pengajuanTpp->besaran_tpp_diajukan)" placeholder="Contoh: 150000000" required step="any" />
+                                                    <x-input-error :messages="$errors->get('besaran_tpp_diajukan')" class="mt-2" />
+                                                    <p class="mt-2 text-sm text-gray-500">Masukkan nominal tanpa titik atau koma. Contoh: 150000000</p>
+                                                </div>
+                                                <x-primary-button>Simpan Besaran</x-primary-button>
+                                            </div>
+                                        </form>
+                                    @else
                                         <div>
-                                            <x-input-label for="besaran_tpp_diajukan"
-                                                value="Total Besaran TPP (Rp)" />
-                                            <x-text-input id="besaran_tpp_diajukan" name="besaran_tpp_diajukan"
-                                                type="number" x-model.number="besaranTpp" class="block mt-1 w-full"
-                                                :value="old(
-                                                    'besaran_tpp_diajukan',
-                                                    $pengajuanTpp->besaran_tpp_diajukan,
-                                                )" placeholder="Contoh: 150000000" required
-                                                step="any" />
-                                            <x-input-error :messages="$errors->get('besaran_tpp_diajukan')" class="mt-2" />
-                                            <p class="mt-2 text-sm text-gray-500">
-                                                Masukkan nominal tanpa titik atau koma. Contoh: 150000000
-                                            </p>
+                                            <div class="text-sm text-gray-500 mb-1">Total Besaran TPP</div>
+                                            <div class="text-2xl font-bold text-gray-900">Rp {{ number_format($pengajuanTpp->besaran_tpp_diajukan, 0, ',', '.') ?? '0' }}</div>
                                         </div>
-                                        <x-primary-button>
-                                            Simpan Besaran
-                                        </x-primary-button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2">
+                            @if ($pengajuanTpp->status == 'diajukan')
+                                <div class="bg-white rounded-xl shadow-sm border border-gray-200 h-full flex flex-col">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-semibold text-gray-900">Tindakan Verifikasi</h3>
                                     </div>
-                                </form>
-                            @else
-                                <div>
-                                    <div class="text-sm text-gray-500 mb-1">Total Besaran TPP</div>
-                                    <div class="text-2xl font-bold text-gray-900">
-                                        Rp {{ number_format($pengajuanTpp->besaran_tpp_diajukan, 0, ',', '.') ?? '0' }}
+                                    <div class="p-6 flex-grow flex flex-col justify-center">
+                                        <div class="space-y-4">
+                                            <button @click="openModal('approve', 'Konfirmasi Persetujuan', '{{ route('verifikasi-tpp.approve', $pengajuanTpp->id) }}')" :disabled="!besaranTpp || besaranTpp <= 0" :class="{ 'opacity-50 cursor-not-allowed': !besaranTpp || besaranTpp <= 0 }" class="w-full inline-flex items-center justify-center px-6 py-3 bg-green-600 border border-transparent rounded-lg font-medium text-white hover:bg-green-700 transition-colors">
+                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                                Setujui
+                                            </button>
+                                            <button @click="openModal('reject', 'Konfirmasi Penolakan', '{{ route('verifikasi-tpp.reject', $pengajuanTpp->id) }}')" class="w-full inline-flex items-center justify-center px-6 py-3 bg-red-600 border border-transparent rounded-lg font-medium text-white hover:bg-red-700 transition-colors">
+                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                Tolak
+                                            </button>
+                                        </div>
+                                        <div x-show="!besaranTpp || besaranTpp <= 0" class="mt-4 p-3 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg">
+                                            <div class="flex">
+                                                <svg class="w-5 h-5 mr-2 mt-0.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                                                <span>Harap isi dan simpan nominal TPP terlebih dahulu sebelum menyetujui.</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             @endif
                         </div>
                     </div>
-
-                    <!-- Actions -->
-                    @if ($pengajuanTpp->status == 'diajukan')
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200">
-                                <h3 class="text-lg font-semibold text-gray-900">Tindakan Verifikasi</h3>
-                            </div>
-                            <div class="p-6">
-                                <div class="flex flex-col sm:flex-row gap-4">
-                                    <button
-                                        @click="openModal('approve', 'Konfirmasi Persetujuan', '{{ route('verifikasi-tpp.approve', $pengajuanTpp->id) }}')"
-                                        :disabled="!besaranTpp || besaranTpp <= 0"
-                                        :class="{ 'opacity-50 cursor-not-allowed': !besaranTpp || besaranTpp <= 0 }"
-                                        class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-green-600 border border-transparent rounded-lg font-medium text-white hover:bg-green-700 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        Setujui
-                                    </button>
-                                    <button
-                                        @click="openModal('reject', 'Konfirmasi Penolakan', '{{ route('verifikasi-tpp.reject', $pengajuanTpp->id) }}')"
-                                        class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-red-600 border border-transparent rounded-lg font-medium text-white hover:bg-red-700 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Tolak
-                                    </button>
-                                </div>
-
-                                <div x-show="!besaranTpp || besaranTpp <= 0"
-                                    class="mt-4 p-3 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg">
-                                    <div class="flex">
-                                        <svg class="w-5 h-5 mr-2 mt-0.5 text-amber-400" fill="currentColor"
-                                            viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        <span>Harap isi dan simpan nominal TPP terlebih dahulu sebelum
-                                            menyetujui.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>

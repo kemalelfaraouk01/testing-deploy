@@ -81,15 +81,5 @@ Alpine.data('notificationBell', () => ({
 // Jadikan Alpine bisa diakses secara global
 window.Alpine = Alpine;
 
-// Jalankan Alpine untuk pertama kali saat halaman dimuat
-document.addEventListener('DOMContentLoaded', () => {
-    Alpine.start();
-});
-
-// Atur agar Alpine di-reset dan dijalankan kembali setiap kali Turbo selesai menukar halaman
-document.addEventListener('turbo:render', () => {
-    if (typeof window.Alpine.destroyTree === 'function') {
-        window.Alpine.destroyTree(document.body);
-    }
-    window.Alpine.start();
-});
+// Jalankan Alpine
+Alpine.start();

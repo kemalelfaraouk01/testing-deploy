@@ -37,13 +37,10 @@ class PensiunDiajukanNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('berkas-pensiun.create', ['pensiun' => $this->pensiun->id, 'hash' => $this->pensiun->getRouteHash()]);
-
         return (new MailMessage)
                     ->subject('Usulan Pensiun dan Permintaan Kelengkapan Berkas')
                     ->line('Anda telah diusulkan untuk pensiun oleh OPD Anda.')
-                    ->line('Mohon untuk segera melengkapi berkas persyaratan Anda dengan menekan tombol di bawah ini.')
-                    ->action('Lengkapi Berkas Pensiun', $url)
+                    ->line('Mohon untuk segera melengkapi berkas persyaratan Anda melalui aplikasi.')
                     ->line('Terima kasih.')
                     ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }
@@ -59,7 +56,7 @@ class PensiunDiajukanNotification extends Notification
             'pensiun_id' => $this->pensiun->id,
             'pegawai_nama' => $this->pensiun->pegawai->nama_lengkap,
             'message' => 'Anda telah diusulkan untuk pensiun. Mohon segera lengkapi berkas persyaratan Anda.',
-            'url' => route('berkas-pensiun.create', ['pensiun' => $this->pensiun->id, 'hash' => $this->pensiun->getRouteHash()]), // Rute untuk melengkapi berkas
+            'url' => '#', // Rute untuk melengkapi berkas
         ];
     }
 }

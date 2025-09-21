@@ -37,13 +37,10 @@ class PensiunPerluPerbaikanNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = route('berkas-pensiun.create', ['pensiun' => $this->pensiun->id, 'hash' => $this->pensiun->getRouteHash()]);
-
         return (new MailMessage)
                     ->subject('Perbaikan Berkas Usulan Pensiun')
                     ->line('Terdapat perbaikan yang diperlukan untuk berkas usulan pensiun Anda.')
                     ->line('Catatan dari verifikator: ' . $this->pensiun->catatan_perbaikan)
-                    ->action('Perbaiki Berkas Sekarang', $url)
                     ->line('Mohon perbarui berkas Anda sesuai catatan di atas. Terima kasih.')
                     ->salutation('Hormat kami, tim SiYanti BKPSDM');
     }
@@ -59,7 +56,7 @@ class PensiunPerluPerbaikanNotification extends Notification
             'pensiun_id' => $this->pensiun->id,
             'pegawai_nama' => $this->pensiun->pegawai->nama_lengkap,
             'message' => 'Usulan pensiun Anda perlu perbaikan. Mohon periksa catatan dan perbarui berkas Anda.',
-            'url' => route('berkas-pensiun.create', ['pensiun' => $this->pensiun->id, 'hash' => $this->pensiun->getRouteHash()]), // Arahkan kembali ke halaman upload
+            'url' => '#', // Arahkan kembali ke halaman upload
             'catatan' => $this->pensiun->catatan_perbaikan, // Sertakan catatan dari operator
         ];
     }

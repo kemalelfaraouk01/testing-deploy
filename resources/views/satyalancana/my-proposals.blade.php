@@ -1,8 +1,8 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 leading-tight">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
+            <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
                 {{ __('Status Usulan Satyalancana Saya') }}
             </h2>
         </div>
@@ -14,7 +14,7 @@
                 <h3 class="text-base sm:text-lg font-bold text-gray-800 border-b pb-2 mb-4">Riwayat Usulan</h3>
 
                 {{-- Mobile Card View --}}
-                <div class="block sm:hidden space-y-4">
+                <div class="block lg:hidden space-y-4">
                     @forelse ($usulans as $usulan)
                         <div class="bg-gray-50 rounded-lg p-4 border">
                             <div class="space-y-3">
@@ -153,7 +153,7 @@
                 </div>
 
                 {{-- Desktop Table View --}}
-                <div class="hidden sm:block overflow-x-auto">
+                <div class="hidden lg:block overflow-x-auto">
                     <table class="min-w-full bg-white">
                         <thead class="bg-gray-100 text-gray-600">
                             <tr>

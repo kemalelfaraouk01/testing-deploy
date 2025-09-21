@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\TppDisetujuiNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 
 class VerifikasiTppController extends Controller
 {
@@ -78,6 +79,29 @@ class VerifikasiTppController extends Controller
 
         return redirect()->route('verifikasi-tpp.index')
             ->with('success', 'Pengajuan TPP telah dikembalikan ke pengelola untuk perbaikan.');
+    }
+
+    public function viewBerkas(PengajuanTpp $pengajuanTpp, $field)
+    {
+        // Whitelist untuk keamanan, hanya field ini yang boleh diakses
+        $allowedFields = [
+            'berkas_tpp',
+            'berkas_spj',
+            'berkas_pernyataan',
+            'berkas_pengantar'
+        ];
+
+        if (!in_array($field, $allowedFields)) {
+            abort(404, 'Jenis berkas tidak valid.');
+        }
+
+        $filePath = $pengajuanTpp->{$field};
+
+        if (!$filePath || !Storage::disk('public')->exists($filePath)) {
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        return response()->file(storage_path('app/public/' . $filePath));
     }
 
     public function updateBesaran(Request $request, PengajuanTpp $pengajuanTpp)
